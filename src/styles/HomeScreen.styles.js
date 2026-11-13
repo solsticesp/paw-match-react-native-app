@@ -47,19 +47,26 @@ export default StyleSheet.create({
         fontSize: 14,
     },
     banner: {
+        flexDirection: "row",
         height: 145,
         borderRadius: radius.lg,
         backgroundColor: "#A6B99A",
         overflow: "hidden",
-        padding: 18,
-        justifyContent: "center",
         marginBottom: 24,
+    },
+    bannerTextContainer: {
+        width: "50%",
+        padding: 16,
+        justifyContent: "center",
     },
     bannerTitle: {
         color: colors.surface,
         fontSize: 22,
         fontWeight: "800",
-        width: "55%",
+    },
+    bannerImage: {
+        width: "50%",
+        height: "100%",
     },
     sectionHeader: {
         flexDirection: "row",
