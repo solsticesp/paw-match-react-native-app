@@ -1,10 +1,9 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text } from 'react-native';
-import MainTabNavigator from './navigation/MainTabNavigator';
 import AuthNavigator from './navigation/AuthNavigator';
 import { UserContext } from './contexts/user/UserContext';
 import UserProvider from './contexts/user/UserProvider';
+import RootStackNavigator from './navigation/RootStackNavigator';
 
 export default function App() {
   return (
@@ -16,7 +15,7 @@ export default function App() {
           <UserContext.Consumer>
             {({ isAuthenticated }) =>
               isAuthenticated
-                ? <MainTabNavigator />
+                ? <RootStackNavigator />
                 : <AuthNavigator />
             }
           </UserContext.Consumer>

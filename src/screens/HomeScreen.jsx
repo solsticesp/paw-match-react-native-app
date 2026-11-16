@@ -1,10 +1,12 @@
-import { View, Text, ScrollView, Image } from "react-native";
+import { View, Text, ScrollView, Image, Pressable } from "react-native";
 import styles from "../styles/HomeScreen.styles";
 import { colors } from "../styles/theme";
 import { Ionicons } from "@expo/vector-icons";
 
 
-export default function HomeScreen() {
+export default function HomeScreen({
+    navigation,
+}) {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.content}>
@@ -21,10 +23,15 @@ export default function HomeScreen() {
                     </View>
                 </View>
 
-                <View style={styles.searchBar}>
+                <Pressable
+                    style={styles.searchBar}
+                    onPress={() => navigation.navigate('PetStack', {
+                        screen: 'Search',
+                    })}
+                >
                     <Ionicons name="search-outline" size={20} color="#888" />
                     <Text style={styles.searchPlaceholder}>Search Pets...</Text>
-                </View>
+                </Pressable>
 
                 <View style={styles.banner}>
                     <View style={styles.bannerTextContainer}>
