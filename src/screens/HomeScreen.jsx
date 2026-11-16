@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, Image } from "react-native";
 import styles from "../styles/HomeScreen.styles";
-import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../styles/theme";
+import { Ionicons } from "@expo/vector-icons";
 
 
 export default function HomeScreen() {

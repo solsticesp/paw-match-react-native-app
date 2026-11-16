@@ -2,6 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text } from 'react-native';
 import MainTabNavigator from './navigation/MainTabNavigator';
+import AuthNavigator from './navigation/AuthNavigator';
 
 export default function App() {
   return (
@@ -9,8 +10,12 @@ export default function App() {
       <StatusBar style="auto" />
 
       <NavigationContainer>
-        <MainTabNavigator />
+        {true
+          ? <AuthNavigator />
+          : <MainTabNavigator />
+        }
       </NavigationContainer>
+
     </>
   );
 }
