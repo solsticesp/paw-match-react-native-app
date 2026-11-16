@@ -5,8 +5,11 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.background,
-        paddingHorizontal: spacing.lg,
+    },
+    content: {
+        flexGrow: 1,
         justifyContent: "center",
+        padding: 24,
     },
     backButton: {
         position: "absolute",

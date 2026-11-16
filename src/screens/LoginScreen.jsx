@@ -1,8 +1,15 @@
 import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import styles from "../styles/LoginScreen.styles";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { useUserContext } from "../contexts/user/UserContext";
 
 export default function LoginScreen({ navigation }) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const { login } = useUserContext();
+
     const signUpHandler = () => {
         navigation.navigate('SignUp');
     }
@@ -31,16 +38,20 @@ export default function LoginScreen({ navigation }) {
                     <TextInput
                         style={styles.input}
                         placeholder="Email Address"
-                    // onChangeText={onChangeText}
-                    // value={text}
+                        onChangeText={setEmail}
+                        value={email}
+                        keyboardType="email-address"
                     />
+
                     <TextInput
                         style={styles.input}
                         placeholder="Password"
-                    // onChangeText={onChangeText}
-                    // value={text}
+                        onChangeText={setPassword}
+                        value={password}
+                        secureTextEntry
                     />
-                    <Pressable style={styles.primaryButton}>
+
+                    <Pressable style={styles.primaryButton} onPress={login}>
                         <Text style={styles.primaryButtonText}>Login</Text>
                     </Pressable>
                 </View>
