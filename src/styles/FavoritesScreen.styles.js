@@ -15,6 +15,7 @@ export default StyleSheet.create({
         fontWeight: "800",
         color: colors.text,
         marginBottom: 18,
+        textAlign: "center",
     },
     petCard: {
         flexDirection: "row",

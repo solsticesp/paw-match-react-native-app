@@ -6,9 +6,15 @@ export default StyleSheet.create({
         flex: 1,
         backgroundColor: colors.background,
     },
+
     content: {
         padding: spacing.md,
         paddingBottom: 28,
+    },
+
+    petRow: {
+        justifyContent: "space-between",
+        marginBottom: 12,
     },
     topRow: {
         flexDirection: "row",
@@ -103,14 +109,5 @@ export default StyleSheet.create({
     },
     categoryTextActive: {
         color: colors.surface,
-    },
-    petGrid: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
-    },
-    petRow: {
-        justifyContent: "space-between",
-        marginBottom: 12,
     },
 });
