@@ -1,20 +1,51 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function UserProvider({
     children,
 }) {
     const [state, setState] = useState(null);
 
-    const loginHandler = (email, password) => {
-        setState({
+    useEffect(() => {
+        loadUser();
+    }, []);
+
+    const loginHandler = async (email, password) => {
+        const newState = {
             email,
             password,
-        });
+        };
+
+        await saveUser(newState);
+
     };
 
+    const saveUser = async (userData) => {
+        try {
+            await AsyncStorage.setItem('user', JSON.stringify(userData));
+
+            setState(userData);
+        } catch (error) {
+            console.error('Failed to save user data to AsyncStorage', error);
+        }
+    }
+
+    const loadUser = async () => {
+        try {
+            const userDataString = await AsyncStorage.getItem('user');
+
+            if(userDataString) {
+                const userData = JSON.parse(userDataString);
+                setState(userData);
+            }
+        } catch (error) {
+            console.error('Failed to load user data from AsyncStorage', error);
+        }
+    }
+
     const logout = () => {
-        setState(null);
+        saveUser(null);
     };
 
     const contextData = {
