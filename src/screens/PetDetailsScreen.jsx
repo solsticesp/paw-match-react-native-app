@@ -58,11 +58,18 @@ export default function PetDetailsScreen({ navigation, route }) {
 
                     <View style={styles.metaRow}>
                         <Text style={styles.metaText}>
-                            {pet.age} {pet.age === 1 ? "year" : "years"} old
+                            <Ionicons name="calendar-outline" size={16} />
+                            {" "}{pet.age} {pet.age === 1 ? "year" : "years"} old
+                        </Text>
+                        
+                        <Text style={styles.metaText}>
+                            <Ionicons name="paw-outline" size={16} />
+                            {" "}{pet.species.charAt(0).toUpperCase() + pet.species.slice(1)}
                         </Text>
 
                         <Text style={styles.metaText}>
-                            {pet.species.charAt(0).toUpperCase() + pet.species.slice(1)}
+                            <Ionicons name="location-outline" size={16} />
+                            {" "}{pet.location}
                         </Text>
                     </View>
 

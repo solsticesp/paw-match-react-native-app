@@ -48,7 +48,7 @@ export default StyleSheet.create({
     },
     banner: {
         flexDirection: "row",
-        height: 145,
+        height: 175,
         borderRadius: radius.lg,
         backgroundColor: "#A6B99A",
         overflow: "hidden",
@@ -108,32 +108,9 @@ export default StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "space-between",
-        gap: 12,
     },
-    petCard: {
-        width: "48%",
-        backgroundColor: colors.surface,
-        borderRadius: radius.md,
-        overflow: "hidden",
-        borderWidth: 1,
-        borderColor: colors.border,
-    },
-    petImage: {
-        width: "100%",
-        height: 128,
-        backgroundColor: colors.primaryLight,
-    },
-    petInfo: {
-        padding: 10,
-    },
-    petName: {
-        fontSize: 15,
-        fontWeight: "800",
-        color: colors.text,
-    },
-    petMeta: {
-        color: colors.textMuted,
-        fontSize: 12,
-        marginTop: 4,
+    petRow: {
+        justifyContent: "space-between",
+        marginBottom: 12,
     },
 });

@@ -22,26 +22,25 @@ export default function PetCard({ pet, onPress }) {
 
 const styles = StyleSheet.create({
     petCard: {
-        flexDirection: "row",
+        width: "48%",
         backgroundColor: colors.surface,
         borderRadius: radius.md,
-        padding: 10,
-        marginTop: 12,
-        alignItems: "center",
+        overflow: "hidden",
+        borderWidth: 1,
+        borderColor: colors.border,
     },
     petImage: {
-        width: 68,
-        height: 68,
-        borderRadius: radius.sm,
+        width: "100%",
+        height: 128,
         backgroundColor: colors.primaryLight,
     },
     petInfo: {
-        marginLeft: 12,
+        padding: 10,
     },
     petName: {
-        color: colors.text,
-        fontWeight: "800",
         fontSize: 15,
+        fontWeight: "800",
+        color: colors.text,
     },
     petMeta: {
         color: colors.textMuted,

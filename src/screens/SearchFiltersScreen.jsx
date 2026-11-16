@@ -3,8 +3,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import styles from "../styles/SearchFiltersScreen.styles";
-import PetCard from "../components/PetCard";
 import { PETS } from "../data/pets";
+import PetCardHorizontal from "../components/PetCardHorizontal";
 
 export default function SearchFiltersScreen({ navigation }) {
     return (
@@ -53,7 +53,7 @@ export default function SearchFiltersScreen({ navigation }) {
             <FlatList
                 data={PETS}
                 renderItem={({ item }) => (
-                    <PetCard
+                    <PetCardHorizontal
                         pet={item}
                         onPress={() =>
                             navigation.navigate("PetDetails", {
