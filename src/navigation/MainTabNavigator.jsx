@@ -1,63 +1,91 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
-import FavoritesScreen from '../screens/FavoritesScreen';
-import ApplicationsScreen from '../screens/ApplicationsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import { Ionicons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 
-export default function MainTabNavigator() {
-    const Tab = createBottomTabNavigator();
+import HomeScreen from "../screens/HomeScreen";
+import MyPetsScreen from "../screens/MyPetsScreen";
+import ApplicationsScreen from "../screens/ApplicationsScreen";
+
+import PetDetailsScreen from "../screens/PetDetailsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import ApplicationFormScreen from "../screens/ApplicationFormScreen";
+// import AddPetScreen from "../screens/AddPetScreen";
+// import EditPetScreen from "../screens/EditPetScreen";
+// import ApplicationDetailsScreen from "../screens/ApplicationDetailsScreen";
+
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+
+function MainTabs() {
 
     return (
-        <Tab.Navigator
-            screenOptions={({ route }) => ({
-                headerShown: false,
-                tabBarActiveTintColor: "#58745A",
-                tabBarInactiveTintColor: "#999999",
-                tabBarStyle: {
-                    backgroundColor: "#FFFFFF",
-                    height: 85,
-                    paddingTop: 8,
-                    paddingBottom: 12,
-                },
-                tabBarLabelStyle: {
-                    fontSize: 12,
-                    fontWeight: "600",
-                },
-                // headerShown: false,
+        <Tab.Navigator screenOptions={{ headerShown: false }}>
 
-                tabBarIcon: ({ focused, color, size }) => {
-                    let iconName;
+            <Tab.Screen
+                name="Home"
+                component={HomeScreen}
+            />
 
-                    switch (route.name) {
-                        case "Home":
-                            iconName = focused ? "home" : "home-outline";
-                            break;
-                        case "Favorites":
-                            iconName = focused ? "heart" : "heart-outline";
-                            break;
-                        case "Applications":
-                            iconName = focused ? "document-text" : "document-text-outline";
-                            break;
-                        case "Profile":
-                            iconName = focused ? "person" : "person-outline";
-                            break;
-                    }
+            <Tab.Screen
+                name="MyPets"
+                component={MyPetsScreen}
+            />
 
-                    return (
-                        <Ionicons
-                            name={iconName}
-                            size={size}
-                            color={color}
-                        />
-                    );
-                },
-            })}
-        >
-            <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Favorites" component={FavoritesScreen} />
-            <Tab.Screen name="Applications" component={ApplicationsScreen} />
-            <Tab.Screen name="Profile" component={ProfileScreen} />
+            <Tab.Screen
+                name="Applications"
+                component={ApplicationsScreen}
+            />
+
+            <Tab.Screen
+                name="Profile"
+                component={ProfileScreen}
+            />
         </Tab.Navigator>
+    );
+}
+
+
+export default function MainTabNavigator() {
+
+    return (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+
+            <Stack.Screen
+                name="Tabs"
+                component={MainTabs}
+                options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+                name="PetDetails"
+                component={PetDetailsScreen}
+                options={{ title: "Pet Details" }}
+            />
+
+            <Stack.Screen
+                name="ApplicationForm"
+                component={ApplicationFormScreen}
+                options={{ title: "Adoption Application" }}
+            />
+
+            {/* <Stack.Screen
+                name="AddPet"
+                component={AddPetScreen}
+                options={{ title: "Add Pet" }}
+            /> */}
+
+            {/* <Stack.Screen
+                name="EditPet"
+                component={EditPetScreen}
+                options={{ title: "Edit Pet" }}
+            /> */}
+
+            {/* <Stack.Screen
+                name="ApplicationDetails"
+                component={ApplicationDetailsScreen}
+                options={{ title: "Application Details" }}
+            /> */}
+
+        </Stack.Navigator>
     );
 }

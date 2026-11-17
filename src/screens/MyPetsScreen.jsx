@@ -1,8 +1,10 @@
-import { View, Text, FlatList } from "react-native";
-import styles from "../styles/FavoritesScreen.styles";
+import { Pressable, Text, FlatList } from "react-native";
+import styles from "../styles/MyPetsScreen";
+import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../styles/theme";
 import PetCardHorizontal from "../components/PetCardHorizontal";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect } from "react";
 
 const favList = [
     {
@@ -31,13 +33,15 @@ const favList = [
     },
 ]
 
-export default function FavoritesScreen() {
+export default function MyPetsScreen() {
+
     return (
         <SafeAreaView
             style={[{ flex: 1 }, styles.container]}
             edges={["top"]}
         >
-            <Text style={styles.title}>Favorites</Text>
+{/* 
+            <Text style={styles.title}>Favorites</Text> */}
 
             {(favList.length > 0)
                 ? (

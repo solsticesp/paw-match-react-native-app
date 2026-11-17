@@ -389,9 +389,8 @@ export default function HomeScreen({ navigation }) {
                     <PetCard
                         pet={item}
                         onPress={() =>
-                            navigation.navigate("PetStack", {
-                                screen: "PetDetails",
-                                params: { petId: item.id },
+                            navigation.navigate("PetDetails", {
+                                petId: item.id,
                             })
                         }
                     />

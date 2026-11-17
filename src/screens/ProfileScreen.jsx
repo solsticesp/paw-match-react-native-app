@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function ProfileScreen({
     name,
     email,
+    navigation,
 }) {
     const initials = name
         ?.split(" ")
@@ -33,25 +34,6 @@ export default function ProfileScreen({
                     <Text style={styles.email}>{email}</Text>
                 </View>
 
-                <View style={styles.menu}>
-                    <ProfileMenuItem
-                        icon="person-outline"
-                        label="Edit Profile"
-                        onPress={() => { }}
-                    />
-
-                    <ProfileMenuItem
-                        icon="heart-outline"
-                        label="My Favorites"
-                        onPress={() => { }}
-                    />
-
-                    <ProfileMenuItem
-                        icon="paw-outline"
-                        label="My Applications"
-                        onPress={() => { }}
-                    />
-                </View>
 
                 <View style={styles.logoutMenu}>
                     <ProfileMenuItem

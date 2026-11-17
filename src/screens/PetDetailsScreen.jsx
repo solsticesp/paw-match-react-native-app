@@ -5,7 +5,10 @@ import { Ionicons } from "@expo/vector-icons";
 import styles from "../styles/PetDetailsScreen.styles";
 import { PETS } from "../data/pets";
 
-export default function PetDetailsScreen({ navigation, route }) {
+export default function PetDetailsScreen({
+    navigation,
+    route,
+}) {
     const { petId } = route.params;
 
     const pet = PETS.find((item) => item.id === petId);
@@ -61,7 +64,7 @@ export default function PetDetailsScreen({ navigation, route }) {
                             <Ionicons name="calendar-outline" size={16} />
                             {" "}{pet.age} {pet.age === 1 ? "year" : "years"} old
                         </Text>
-                        
+
                         <Text style={styles.metaText}>
                             <Ionicons name="paw-outline" size={16} />
                             {" "}{pet.species.charAt(0).toUpperCase() + pet.species.slice(1)}
@@ -90,7 +93,9 @@ export default function PetDetailsScreen({ navigation, route }) {
             <View style={styles.bottomAction}>
                 <Pressable
                     style={styles.primaryButton}
-                    onPress={() => console.log("Adoption application:", pet.id)}
+                    onPress={() =>
+                        navigation.navigate("ApplicationForm", { pet })
+                    }
                 >
                     <Text style={styles.primaryButtonText}>
                         Apply to Adopt

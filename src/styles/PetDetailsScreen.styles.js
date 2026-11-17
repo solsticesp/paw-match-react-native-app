@@ -13,7 +13,7 @@ export default StyleSheet.create({
     },
     imageControls: {
         position: "absolute",
-        top: 54,
+        top: 18,
         left: spacing.md,
         right: spacing.md,
         flexDirection: "row",

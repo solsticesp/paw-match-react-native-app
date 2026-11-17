@@ -1,9 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import AuthNavigator from './navigation/AuthNavigator';
 import { UserContext } from './contexts/user/UserContext';
 import UserProvider from './contexts/user/UserProvider';
-import RootStackNavigator from './navigation/RootStackNavigator';
+import RootNavigator from './navigation/RootNavigator';
 
 export default function App() {
   return (
@@ -13,11 +12,9 @@ export default function App() {
       <NavigationContainer>
         <UserProvider>
           <UserContext.Consumer>
-            {({ isAuthenticated }) =>
-              isAuthenticated
-                ? <RootStackNavigator />
-                : <AuthNavigator />
-            }
+            {({ isAuthenticated }) => (
+              <RootNavigator isAuthenticated={isAuthenticated} />
+            )}
           </UserContext.Consumer>
         </UserProvider>
       </NavigationContainer>
