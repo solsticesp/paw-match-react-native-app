@@ -35,7 +35,11 @@ const styles = StyleSheet.create({
         backgroundColor: colors.primaryLight,
     },
     petInfo: {
-        padding: 10,
+        backgroundColor: colors.surface,
+        borderTopLeftRadius: radius.md,
+        borderTopRightRadius: radius.md,
+        padding: 15,
+        marginTop: -15,
     },
     petName: {
         fontSize: 15,

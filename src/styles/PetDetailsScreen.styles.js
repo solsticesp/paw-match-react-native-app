@@ -13,9 +13,9 @@ export default StyleSheet.create({
     },
     imageControls: {
         position: "absolute",
-        top: 18,
-        left: spacing.md,
-        right: spacing.md,
+        top: 12,
+        left: spacing.sm,
+        right: spacing.sm,
         flexDirection: "row",
         justifyContent: "space-between",
     },

@@ -37,6 +37,13 @@ export default StyleSheet.create({
         height: 42,
         borderRadius: 21,
         backgroundColor: colors.primaryLight,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    avatarText: {
+        fontSize: 14,
+        color: colors.primaryDark,
+        fontWeight: "600",
     },
     searchBar: {
         height: 48,
