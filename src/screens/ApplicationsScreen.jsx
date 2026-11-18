@@ -2,20 +2,24 @@ import { useState } from "react";
 import { View, Text, Pressable, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import {
+    SENT_APPLICATIONS,
+    RECEIVED_APPLICATIONS,
+} from "../data/applications";
 
 import styles from "../styles/ApplicationsScreen.styles";
+import ApplicationCard from "../components/ApplicationCard";
 
-export default function ApplicationsScreen() {
+export default function ApplicationsScreen({
+    navigation,
+}) {
     const [activeTab, setActiveTab] = useState("sent");
-
-    // Example data
-    const sentApplications = [];
-    const receivedApplications = [];
 
     const applications =
         activeTab === "sent"
-            ? sentApplications
-            : receivedApplications;
+            ? SENT_APPLICATIONS
+            : RECEIVED_APPLICATIONS;
+
 
     return (
 
@@ -67,9 +71,16 @@ export default function ApplicationsScreen() {
                     data={applications}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
-                        <View style={styles.applicationCard}>
-                            {/* Your existing application card content */}
-                        </View>
+                        <ApplicationCard
+                            application={item}
+                            type={activeTab}
+                            onPress={() =>
+                                navigation.getParent().navigate("ApplicationDetails", {
+                                    application: item,
+                                    type: activeTab,
+                                })
+                            }
+                        />
                     )}
                     contentContainerStyle={styles.listContent}
                     ListEmptyComponent={

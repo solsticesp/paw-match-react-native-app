@@ -12,7 +12,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import ApplicationFormScreen from "../screens/ApplicationFormScreen";
 import AddPetScreen from "../screens/AddPetScreen";
 import SearchFiltersScreen from "../screens/SearchFiltersScreen";
-// import ApplicationDetailsScreen from "../screens/ApplicationDetailsScreen";
+import ApplicationsDetailsScreen from "../screens/ApplicationDetailsScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -117,11 +117,11 @@ export default function MainTabNavigator() {
                 options={{ title: "Find a Pet" }}
             />
 
-            {/* <Stack.Screen
+            <Stack.Screen
                 name="ApplicationDetails"
-                component={ApplicationDetailsScreen}
+                component={ApplicationsDetailsScreen}
                 options={{ title: "Application Details" }}
-            /> */}
+            />
 
         </Stack.Navigator>
     );
