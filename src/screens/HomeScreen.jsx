@@ -1,16 +1,16 @@
-import { View, Text, Image, Pressable, FlatList } from "react-native";
+import { View, Text, Image, Pressable, FlatList, Alert } from "react-native";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import styles from "../styles/HomeScreen.styles";
 import { colors } from "../styles/theme";
-import { PETS } from "../data/pets";
+import { petsApi } from "../api";
 import PetCard from "../components/PetCard";
 import { useUserContext } from "../contexts/user/UserContext";
 
 
 export default function HomeScreen({ navigation }) {
-
     const { user } = useUserContext();
 
     const name = `${user?.first_name || ""} ${user?.last_name || ""}`.trim();
@@ -22,9 +22,16 @@ export default function HomeScreen({ navigation }) {
         .join("")
         .toUpperCase();
 
+    const [featuredPets, setFeaturedPets] = useState([]);
+
+    useEffect(() => {
+        petsApi.getFeatured()
+            .then(result => setFeaturedPets(result))
+            .catch(error => Alert.alert("Error", error.message));
+    }, []);
+
     const renderHeader = () => (
         <View>
-            {/* Header */}
             <View style={styles.topRow}>
                 <View>
                     <Text style={styles.greeting}>Hello, {name}</Text>
@@ -98,11 +105,7 @@ export default function HomeScreen({ navigation }) {
                 <Text style={styles.sectionTitle}>Featured Pets</Text>
 
                 <Pressable
-                    onPress={() =>
-                        navigation.navigate("PetStack", {
-                            screen: "Search",
-                        })
-                    }
+                    onPress={() => navigation.navigate("BrowsePets")}
                 >
                     <Text style={styles.seeAll}>See All</Text>
                 </Pressable>
@@ -113,7 +116,7 @@ export default function HomeScreen({ navigation }) {
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
             <FlatList
-                data={PETS}
+                data={featuredPets}
                 numColumns={2}
                 renderItem={({ item }) => (
                     <PetCard

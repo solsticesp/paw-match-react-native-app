@@ -34,7 +34,6 @@ export default function PetDetailsScreen({
         <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
 
             <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Hero image */}
                 <View>
                     <Image
                         source={{ uri: pet.image_url }}
@@ -42,7 +41,6 @@ export default function PetDetailsScreen({
                         resizeMode="cover"
                     />
 
-                    {/* Image controls */}
                     <View style={styles.imageControls}>
                         <Pressable
                             style={styles.roundButton}
@@ -57,7 +55,6 @@ export default function PetDetailsScreen({
                     </View>
                 </View>
 
-                {/* Pet information */}
                 <View style={styles.content}>
 
                     <View style={styles.titleRow}>
@@ -96,7 +93,6 @@ export default function PetDetailsScreen({
                 </View>
             </ScrollView>
 
-            {/* Bottom action */}
             <View style={styles.bottomAction}>
                 <Pressable
                     style={styles.primaryButton}
