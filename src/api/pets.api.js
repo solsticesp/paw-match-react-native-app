@@ -16,7 +16,7 @@ export async function getById(id) {
 
 export async function getFeatured() {
     const response = await api.get(
-        '/pets?select=*,categories(name)&status=eq.Available&order=created_at.desc&limit=6'
+        '/pets?select=*,categories(name)&status=eq.Available&order=created_at.desc&limit=4'
     );
 
     return response.data;

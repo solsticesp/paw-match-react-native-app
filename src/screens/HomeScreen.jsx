@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, FlatList, Alert } from "react-native";
+import { View, Text, Image, Pressable, FlatList, Alert, RefreshControl } from "react-native";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -23,12 +23,26 @@ export default function HomeScreen({ navigation }) {
         .toUpperCase();
 
     const [featuredPets, setFeaturedPets] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         petsApi.getFeatured()
             .then(result => setFeaturedPets(result))
             .catch(error => Alert.alert("Error", error.message));
     }, []);
+
+const handleRefresh = async () => {
+    setRefreshing(true);
+
+    try {
+        const data = await petsApi.getFeatured();
+        setFeaturedPets(data);
+    } catch (error) {
+        Alert.alert('Error', error.message);
+    } finally {
+        setRefreshing(false);
+    }
+};
 
     const renderHeader = () => (
         <View>
@@ -116,6 +130,7 @@ export default function HomeScreen({ navigation }) {
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
             <FlatList
+                refreshControl={<RefreshControl refreshing={false} onRefresh={handleRefresh} />}
                 data={featuredPets}
                 numColumns={2}
                 renderItem={({ item }) => (
