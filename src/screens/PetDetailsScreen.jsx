@@ -1,17 +1,24 @@
 import { View, Text, Image, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from 'react';
 
 import styles from "../styles/PetDetailsScreen.styles";
-import { PETS } from "../data/pets";
+import { petsApi } from '../api';
 
 export default function PetDetailsScreen({
     navigation,
     route,
 }) {
     const { petId } = route.params;
+    const [pet, setPet] = useState(null);
 
-    const pet = PETS.find((item) => item.id === petId);
+    useEffect(() => {
+        petsApi.getById(petId)
+            .then(result => setPet(result))
+            .catch(error => Alert.alert("Error", error.message))
+            // .finally(() => setLoading(false));
+    }, [petId]);
 
     if (!pet) {
         return (
@@ -21,6 +28,8 @@ export default function PetDetailsScreen({
         );
     }
 
+    const category = pet.categories?.name || "Pet";
+
     return (
         <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
 
@@ -28,7 +37,7 @@ export default function PetDetailsScreen({
                 {/* Hero image */}
                 <View>
                     <Image
-                        source={{ uri: pet.imageUrl }}
+                        source={{ uri: pet.image_url }}
                         style={styles.heroImage}
                         resizeMode="cover"
                     />
@@ -67,7 +76,7 @@ export default function PetDetailsScreen({
 
                         <Text style={styles.metaText}>
                             <Ionicons name="paw-outline" size={16} />
-                            {" "}{pet.species.charAt(0).toUpperCase() + pet.species.slice(1)}
+                            {" "}{category.charAt(0).toUpperCase() + category.slice(1)}
                         </Text>
 
                         <Text style={styles.metaText}>
@@ -81,9 +90,7 @@ export default function PetDetailsScreen({
                     </Text>
 
                     <Text style={styles.description}>
-                        Meet {pet.name}! This lovely {pet.species} is looking
-                        for a loving forever home. Get to know {pet.name}
-                        and discover if you could be the perfect match.
+                        {pet.description}
                     </Text>
 
                 </View>

@@ -1,37 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     View,
     Text,
     FlatList,
     TextInput,
     Pressable,
+    Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import styles from "../styles/SearchFiltersScreen.styles";
-import { PETS } from "../data/pets";
+
+// import { PETS } from "../data/pets";
+import { petsApi } from '../api';
 import PetCardHorizontal from "../components/PetCardHorizontal";
 
 const FILTERS = ["All", "Dogs", "Cats", "Other"];
 
-export default function SearchFiltersScreen({ navigation }) {
 
+export default function SearchFiltersScreen({
+    navigation,
+}) {
     const [selectedFilter, setSelectedFilter] = useState("All");
     const [search, setSearch] = useState("");
+    const [pets, setPets] = useState([]);
 
-    const filteredPets = PETS.filter((pet) => {
+    useEffect(() => {
+        petsApi.getAll()
+            .then(result => setPets(result))
+            .catch((error) => Alert.alert('Error', error.message))
+    }, []);
+
+    const filteredPets = pets.filter((pet) => {
+        const category = pet.categories?.name?.toLowerCase();
 
         const matchesFilter =
             selectedFilter === "All" ||
-            pet.species.toLowerCase() === selectedFilter.toLowerCase().replace(/s$/, "");
+            category === selectedFilter.toLowerCase().replace(/s$/, "");
 
         const searchText = search.toLowerCase();
 
         const matchesSearch =
             pet.name.toLowerCase().includes(searchText) ||
-            pet.species.toLowerCase().includes(searchText) ||
-            pet.breed?.toLowerCase().includes(searchText);
+            category?.includes(searchText) 
 
         return matchesFilter && matchesSearch;
     });
@@ -58,7 +70,6 @@ export default function SearchFiltersScreen({ navigation }) {
                 onChangeText={setSearch}
             />
 
-            {/* Filter Chips */}
             <View style={styles.filterGroup}>
                 <View style={styles.optionsRow}>
                     {FILTERS.map((filter) => {

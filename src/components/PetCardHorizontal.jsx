@@ -1,11 +1,14 @@
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { colors, radius } from "../styles/theme";
 
-export default function PetCardHorizontal({ pet, onPress }) {
+export default function PetCardHorizontal({ 
+    pet, 
+    onPress,
+}) {
     return (
         <Pressable style={styles.petCard} onPress={onPress}>
             <Image
-                source={{ uri: pet.imageUrl }}
+                source={{ uri: pet.image_url }}
                 style={styles.petImage}
                 resizeMode="cover"
             />
@@ -13,7 +16,7 @@ export default function PetCardHorizontal({ pet, onPress }) {
             <View style={styles.petInfo}>
                 <Text style={styles.petName}>{pet.name}</Text>
                 <Text style={styles.petMeta}>
-                    {pet.age} {pet.age === 1 ? 'year' : 'years'} • {pet.species}
+                    {pet.age} {pet.age === 1 ? 'year' : 'years'} • {pet.categories?.name}
                 </Text>
             </View>
         </Pressable>

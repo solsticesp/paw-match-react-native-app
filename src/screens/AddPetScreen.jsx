@@ -135,34 +135,34 @@ export default function AddPetScreen({
                     />
                 </View>
 
-                <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Species</Text>
-                    <View style={styles.optionRow}>
-                        {["Dog", "Cat", "Other"].map((item) => (
-                            <Pressable
-                                key={item}
-                                style={[
-                                    styles.optionChip,
-                                    form.species.toLowerCase() === item.toLowerCase() &&
-                                    styles.selectedOptionChip,
-                                ]}
-                                onPress={() => updateField("species", item.toLowerCase())}
-                            >
-                                <Text
-                                    style={[
-                                        styles.optionText,
-                                        form.species.toLowerCase() === item.toLowerCase() &&
-                                        styles.selectedOptionText,
-                                    ]}
-                                >
-                                    {item}
-                                </Text>
-                            </Pressable>
-                        ))}
-                    </View>
-                </View>
-
                 <View style={styles.row}>
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Species</Text>
+                        <View style={styles.optionRow}>
+                            {["Dog", "Cat", "Other"].map((item) => (
+                                <Pressable
+                                    key={item}
+                                    style={[
+                                        styles.optionChip,
+                                        form.species.toLowerCase() === item.toLowerCase() &&
+                                        styles.selectedOptionChip,
+                                    ]}
+                                    onPress={() => updateField("species", item.toLowerCase())}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.optionText,
+                                            form.species.toLowerCase() === item.toLowerCase() &&
+                                            styles.selectedOptionText,
+                                        ]}
+                                    >
+                                        {item}
+                                    </Text>
+                                </Pressable>
+                            ))}
+                        </View>
+                    </View>
+
                     <View style={styles.halfInput}>
                         <Text style={styles.label}>Age</Text>
                         <TextInput
@@ -173,56 +173,6 @@ export default function AddPetScreen({
                             // onChangeText={(value) => updateField("age", value)}
                             keyboardType="numeric"
                         />
-                    </View>
-
-                    <View style={styles.halfInput}>
-                        <Text style={styles.label}>Gender</Text>
-                        <View style={styles.optionRow}>
-                            {["Male", "Female"].map((item) => (
-                                <Pressable
-                                    key={item}
-                                    style={[
-                                        styles.optionChip,
-                                        form.gender === item && styles.selectedOptionChip,
-                                    ]}
-                                    onPress={() => updateField("gender", item)}
-                                >
-                                    <Text
-                                        style={[
-                                            styles.optionText,
-                                            form.gender === item && styles.selectedOptionText,
-                                        ]}
-                                    >
-                                        {item}
-                                    </Text>
-                                </Pressable>
-                            ))}
-                        </View>
-                    </View>
-                </View>
-
-                <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Size</Text>
-                    <View style={styles.optionRow}>
-                        {["Small", "Medium", "Large"].map((item) => (
-                            <Pressable
-                                key={item}
-                                style={[
-                                    styles.optionChip,
-                                    form.size === item && styles.selectedOptionChip,
-                                ]}
-                                onPress={() => updateField("size", item)}
-                            >
-                                <Text
-                                    style={[
-                                        styles.optionText,
-                                        form.size === item && styles.selectedOptionText,
-                                    ]}
-                                >
-                                    {item}
-                                </Text>
-                            </Pressable>
-                        ))}
                     </View>
                 </View>
 
