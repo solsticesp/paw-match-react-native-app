@@ -85,6 +85,29 @@ import { Ionicons } from "@expo/vector-icons";
 
 import styles from "../styles/MyPetsScreen.styles";
 import { colors } from "../styles/theme";
+import MyPetCard from "../components/MyPetCard";
+
+
+const MY_PETS = [
+    {
+        id: "1",
+        name: "Max",
+        age: 2,
+        type: "Dog",
+        breed: "Golden Retriever",
+        status: "Available",
+        image: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500",
+    },
+    {
+        id: "2",
+        name: "Luna",
+        age: 1,
+        type: "Cat",
+        breed: "British Shorthair",
+        status: "Available",
+        image: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=500",
+    },
+];
 
 export default function MyPetsScreen({ navigation }) {
     return (
@@ -112,87 +135,18 @@ export default function MyPetsScreen({ navigation }) {
 
                 {/* Pet List */}
                 <View style={styles.petList}>
-
-                    {/* Pet Card 1 */}
-                    <View style={styles.petCard}>
-                        <Image
-                            source={{
-                                uri: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500"
-                            }}
-                            style={styles.petImage}
-                            resizeMode="cover"
+                    {MY_PETS.map((pet) => (
+                        <MyPetCard
+                            key={pet.id}
+                            pet={pet}
+                            onEdit={(id) =>
+                                navigation.navigate("EditPet", {
+                                    petId: id,
+                                })
+                            }
+                            onDelete={(id) => console.log("Delete pet:", id)}
                         />
-
-                        <View style={styles.petInfo}>
-                            <View style={styles.petHeader}>
-                                <Text style={styles.petName}>Max</Text>
-
-                                <View style={styles.statusBadge}>
-                                    <Text style={styles.statusText}>Available</Text>
-                                </View>
-                            </View>
-
-                            <Text style={styles.petMeta}>
-                                2 years • Dog
-                            </Text>
-
-                            <Text style={styles.petBreed}>
-                                Golden Retriever
-                            </Text>
-
-                            <View style={styles.cardActions}>
-                                <Pressable style={styles.editButton}>
-                                    <Ionicons name="create-outline" size={16} color="#58745A" />
-                                    <Text style={styles.editButtonText}>Edit</Text>
-                                </Pressable>
-
-                                <Pressable style={styles.deleteButton}>
-                                    <Ionicons name="trash-outline" size={18} color={colors.danger} />
-                                </Pressable>
-                            </View>
-                        </View>
-                    </View>
-
-                    {/* Pet Card 2 */}
-                    <View style={styles.petCard}>
-                        <Image
-                            source={{
-                                uri: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=500"
-                            }}
-                            style={styles.petImage}
-                            resizeMode="cover"
-                        />
-
-                        <View style={styles.petInfo}>
-                            <View style={styles.petHeader}>
-                                <Text style={styles.petName}>Luna</Text>
-
-                                <View style={styles.statusBadge}>
-                                    <Text style={styles.statusText}>Available</Text>
-                                </View>
-                            </View>
-
-                            <Text style={styles.petMeta}>
-                                1 year • Cat
-                            </Text>
-
-                            <Text style={styles.petBreed}>
-                                British Shorthair
-                            </Text>
-
-                            <View style={styles.cardActions}>
-                                <Pressable style={styles.editButton}>
-                                    <Ionicons name="create-outline" size={16} color="#58745A" />
-                                    <Text style={styles.editButtonText}>Edit</Text>
-                                </Pressable>
-
-                                <Pressable style={styles.deleteButton}>
-                                    <Ionicons name="trash-outline" size={18} color={colors.danger} />
-                                </Pressable>
-                            </View>
-                        </View>
-                    </View>
-
+                    ))}
                 </View>
             </ScrollView>
         </SafeAreaView>
