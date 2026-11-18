@@ -7,6 +7,15 @@ export default StyleSheet.create({
         backgroundColor: colors.background,
         padding: spacing.md,
     },
+    content: {
+        paddingBottom: 20,
+    },
+    emptyText: {
+        textAlign: "center",
+        color: colors.textMuted,
+        fontSize: 14,
+        marginTop: 40,
+    },
     header: {
         flexDirection: "row",
         alignItems: "center",

@@ -8,7 +8,7 @@ export default function MyPetCard({ pet, onEdit, onDelete }) {
     return (
         <View style={styles.petCard}>
             <Image
-                source={{ uri: pet.image }}
+                source={{ uri: pet.imageUrl }}
                 style={styles.petImage}
                 resizeMode="cover"
             />
@@ -25,11 +25,7 @@ export default function MyPetCard({ pet, onEdit, onDelete }) {
                 </View>
 
                 <Text style={styles.petMeta}>
-                    {pet.age} • {pet.type}
-                </Text>
-
-                <Text style={styles.petBreed}>
-                    {pet.breed}
+                    {pet.age} {pet.age === 1 ? 'year' : 'years'} • {pet.type} • {pet.location}
                 </Text>
 
                 <View style={styles.cardActions}>

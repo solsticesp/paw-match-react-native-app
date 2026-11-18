@@ -11,15 +11,65 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import styles from "../styles/AddPetScreen.styles";
+import { useEffect, useState } from "react";
+import { MY_PETS } from "../data/pets";
 
-export default function AddPetScreen({ navigation }) {
+export default function AddPetScreen({
+    navigation,
+    route,
+    id,
+}) {
+
+    const petId = route.params?.petId;
+
+    const isEditing = Boolean(petId);
+
+    const [form, setForm] = useState({
+        name: "",
+        species: "",
+        age: "",
+        gender: "",
+        size: "",
+        location: "",
+        description: "",
+        imageUrl: "",
+    });
+
+    useEffect(() => {
+        if (isEditing) {
+            const pet = MY_PETS.find(
+                (item) => item.id === petId
+            );
+
+            if (pet) {
+                setForm({
+                    name: pet.name,
+                    species: pet.species,
+                    breed: pet.breed,
+                    age: String(pet.age),
+                    gender: pet.gender,
+                    size: pet.size,
+                    location: pet.location,
+                    description: pet.description,
+                    imageUrl: pet.imageUrl,
+                });
+            }
+        }
+    }, [petId, isEditing]);
+
+    const updateField = (field, value) => {
+        setForm((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
     return (
         <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
             <ScrollView
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Header */}
                 <View style={styles.header}>
                     <Pressable
                         style={styles.backButton}
@@ -28,15 +78,19 @@ export default function AddPetScreen({ navigation }) {
                         <Ionicons name="arrow-back" size={22} color="#252923" />
                     </Pressable>
 
-                    <Text style={styles.title}>Add a Pet</Text>
+                    <Text style={styles.title}>
+                        {isEditing ? "Edit Pet" : "Add a Pet"}
+                    </Text>
                 </View>
 
                 <Text style={styles.subtitle}>
-                    Help a furry friend find their forever home.
+                    {isEditing
+                        ? "Update your pet's information."
+                        : "Help a furry friend find their forever home."}
                 </Text>
 
                 {/* Image Upload */}
-                <Text style={styles.sectionTitle}>Pet Photo</Text>
+                {/* <Text style={styles.sectionTitle}>Pet Photo</Text>
 
                 <Pressable style={styles.imageUpload}>
                     <Ionicons name="camera-outline" size={32} color="#58745A" />
@@ -44,17 +98,40 @@ export default function AddPetScreen({ navigation }) {
                     <Text style={styles.uploadSubtitle}>
                         Add a clear photo of your pet
                     </Text>
-                </Pressable>
+                </Pressable> */}
 
-                {/* Basic Information */}
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Pet Image URL</Text>
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Paste image URL here"
+                        placeholderTextColor="#777D74"
+                        value={form.imageUrl}
+                        onChangeText={(value) => updateField("imageUrl", value)}
+                        autoCapitalize="none"
+                        keyboardType="url"
+                    />
+
+                    {form.imageUrl.trim() !== "" && (
+                        <Image
+                            source={{ uri: form.imageUrl }}
+                            style={styles.petImage}
+                            resizeMode="cover"
+                        />
+                    )}
+                </View>
+
                 <Text style={styles.sectionTitle}>Basic Information</Text>
 
                 <View style={styles.inputGroup}>
                     <Text style={styles.label}>Pet Name</Text>
                     <TextInput
                         style={styles.input}
+                        value={form.name}
                         placeholder="Enter pet name"
                         placeholderTextColor="#777D74"
+                    // onChangeText={(value) => updateField("name", value)}
                     />
                 </View>
 
@@ -62,20 +139,27 @@ export default function AddPetScreen({ navigation }) {
                     <Text style={styles.label}>Species</Text>
                     <View style={styles.optionRow}>
                         {["Dog", "Cat", "Other"].map((item) => (
-                            <View key={item} style={styles.optionChip}>
-                                <Text style={styles.optionText}>{item}</Text>
-                            </View>
+                            <Pressable
+                                key={item}
+                                style={[
+                                    styles.optionChip,
+                                    form.species.toLowerCase() === item.toLowerCase() &&
+                                    styles.selectedOptionChip,
+                                ]}
+                                onPress={() => updateField("species", item.toLowerCase())}
+                            >
+                                <Text
+                                    style={[
+                                        styles.optionText,
+                                        form.species.toLowerCase() === item.toLowerCase() &&
+                                        styles.selectedOptionText,
+                                    ]}
+                                >
+                                    {item}
+                                </Text>
+                            </Pressable>
                         ))}
                     </View>
-                </View>
-
-                <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Breed</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter breed"
-                        placeholderTextColor="#777D74"
-                    />
                 </View>
 
                 <View style={styles.row}>
@@ -83,20 +167,36 @@ export default function AddPetScreen({ navigation }) {
                         <Text style={styles.label}>Age</Text>
                         <TextInput
                             style={styles.input}
+                            value={form.age}
                             placeholder="e.g. 2 years"
                             placeholderTextColor="#777D74"
+                            // onChangeText={(value) => updateField("age", value)}
+                            keyboardType="numeric"
                         />
                     </View>
 
                     <View style={styles.halfInput}>
                         <Text style={styles.label}>Gender</Text>
                         <View style={styles.optionRow}>
-                            <View style={styles.optionChip}>
-                                <Text style={styles.optionText}>Male</Text>
-                            </View>
-                            <View style={styles.optionChip}>
-                                <Text style={styles.optionText}>Female</Text>
-                            </View>
+                            {["Male", "Female"].map((item) => (
+                                <Pressable
+                                    key={item}
+                                    style={[
+                                        styles.optionChip,
+                                        form.gender === item && styles.selectedOptionChip,
+                                    ]}
+                                    onPress={() => updateField("gender", item)}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.optionText,
+                                            form.gender === item && styles.selectedOptionText,
+                                        ]}
+                                    >
+                                        {item}
+                                    </Text>
+                                </Pressable>
+                            ))}
                         </View>
                     </View>
                 </View>
@@ -105,14 +205,27 @@ export default function AddPetScreen({ navigation }) {
                     <Text style={styles.label}>Size</Text>
                     <View style={styles.optionRow}>
                         {["Small", "Medium", "Large"].map((item) => (
-                            <View key={item} style={styles.optionChip}>
-                                <Text style={styles.optionText}>{item}</Text>
-                            </View>
+                            <Pressable
+                                key={item}
+                                style={[
+                                    styles.optionChip,
+                                    form.size === item && styles.selectedOptionChip,
+                                ]}
+                                onPress={() => updateField("size", item)}
+                            >
+                                <Text
+                                    style={[
+                                        styles.optionText,
+                                        form.size === item && styles.selectedOptionText,
+                                    ]}
+                                >
+                                    {item}
+                                </Text>
+                            </Pressable>
                         ))}
                     </View>
                 </View>
 
-                {/* Additional Information */}
                 <Text style={styles.sectionTitle}>
                     Additional Information
                 </Text>
@@ -123,6 +236,8 @@ export default function AddPetScreen({ navigation }) {
                         style={styles.input}
                         placeholder="City or town"
                         placeholderTextColor="#777D74"
+                        value={form.location}
+                        onChangeText={(value) => updateField("location", value)}
                     />
                 </View>
 
@@ -131,6 +246,8 @@ export default function AddPetScreen({ navigation }) {
                     <TextInput
                         style={[styles.input, styles.textArea]}
                         placeholder="Tell us about your pet's personality, habits and needs..."
+                        value={form.description}
+                        // onChangeText={(value) => updateField("description", value)}
                         placeholderTextColor="#777D74"
                         multiline
                         numberOfLines={5}
@@ -138,7 +255,6 @@ export default function AddPetScreen({ navigation }) {
                     />
                 </View>
 
-                {/* Submit */}
                 <Pressable style={styles.submitButton}>
                     <Text style={styles.submitButtonText}>
                         Publish Pet

@@ -10,8 +10,8 @@ import ApplicationsScreen from "../screens/ApplicationsScreen";
 import PetDetailsScreen from "../screens/PetDetailsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import ApplicationFormScreen from "../screens/ApplicationFormScreen";
-// import AddPetScreen from "../screens/AddPetScreen";
-// import EditPetScreen from "../screens/EditPetScreen";
+import AddPetScreen from "../screens/AddPetScreen";
+import SearchFiltersScreen from "../screens/SearchFiltersScreen";
 // import ApplicationDetailsScreen from "../screens/ApplicationDetailsScreen";
 
 const Tab = createBottomTabNavigator();
@@ -21,29 +21,6 @@ const Stack = createStackNavigator();
 function MainTabs() {
 
     return (
-        // <Tab.Navigator screenOptions={{ headerShown: false }}>
-
-        //     <Tab.Screen
-        //         name="Home"
-        //         component={HomeScreen}
-        //     />
-
-        //     <Tab.Screen
-        //         name="MyPets"
-        //         component={MyPetsScreen}
-        //     />
-
-        //     <Tab.Screen
-        //         name="Applications"
-        //         component={ApplicationsScreen}
-        //     />
-
-        //     <Tab.Screen
-        //         name="Profile"
-        //         component={ProfileScreen}
-        //     />
-        // </Tab.Navigator>
-
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 headerShown: false,
@@ -128,17 +105,17 @@ export default function MainTabNavigator() {
                 options={{ title: "Adoption Application" }}
             />
 
-            {/* <Stack.Screen
+            <Stack.Screen
                 name="AddPet"
                 component={AddPetScreen}
                 options={{ title: "Add Pet" }}
-            /> */}
+            />
 
-            {/* <Stack.Screen
-                name="EditPet"
-                component={EditPetScreen}
-                options={{ title: "Edit Pet" }}
-            /> */}
+            <Stack.Screen
+                name="BrowsePets"
+                component={SearchFiltersScreen}
+                options={{ title: "Find a Pet" }}
+            />
 
             {/* <Stack.Screen
                 name="ApplicationDetails"

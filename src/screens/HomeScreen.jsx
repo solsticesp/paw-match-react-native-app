@@ -33,15 +33,18 @@ export default function HomeScreen({ navigation }) {
                     </Text>
                 </View>
 
-                <View style={styles.avatar}>
+                <Pressable
+                    style={styles.avatar}
+                    onPress={() => navigation.navigate("Profile")}
+                >
                     <Text style={styles.avatarText}>
                         {initials || "U"}
                     </Text>
-                </View>
+                </Pressable>
             </View>
 
             {/* Search */}
-            <Pressable
+            {/* <Pressable
                 style={styles.searchBar}
                 onPress={() =>
                     navigation.navigate("PetStack", {
@@ -53,21 +56,32 @@ export default function HomeScreen({ navigation }) {
                 <Text style={styles.searchPlaceholder}>
                     Search Pets...
                 </Text>
-            </Pressable>
+            </Pressable> */}
 
             {/* Banner */}
             <View style={styles.banner}>
                 <View style={styles.bannerTextContainer}>
                     <Text style={styles.bannerTitle}>
-                        Adopt Don't Shop
+                        Adopt{"\n"}Don't Shop
                     </Text>
 
-                    <Ionicons
-                        name="paw"
-                        size={28}
-                        color={colors.surface}
-                        style={styles.bannerPaw}
-                    />
+                    <Text style={styles.bannerSubtitle}>
+                        Find your new best friend and give them a loving home.
+                    </Text>
+
+                    <Pressable
+                        style={styles.bannerButton}
+                        onPress={() => navigation.navigate("BrowsePets")}
+                    >
+                        <Text style={styles.bannerButtonText}>
+                            Browse Pets
+                        </Text>
+                        <Ionicons
+                            name="paw"
+                            size={15}
+                            color={colors.primaryDark}
+                        />
+                    </Pressable>
                 </View>
 
                 <Image
@@ -78,6 +92,7 @@ export default function HomeScreen({ navigation }) {
                     resizeMode="cover"
                 />
             </View>
+
 
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Featured Pets</Text>

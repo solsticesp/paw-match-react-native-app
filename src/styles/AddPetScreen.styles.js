@@ -103,6 +103,13 @@ export default StyleSheet.create({
         fontWeight: "600",
         color: colors.textMuted,
     },
+    selectedOptionChip: {
+        backgroundColor: colors.primary,
+        borderColor: colors.primaryDark,
+    },
+    selectedOptionText: {
+        color: colors.surface,
+    },
     textArea: {
         minHeight: 120,
         paddingTop: 14,
