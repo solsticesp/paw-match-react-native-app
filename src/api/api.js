@@ -5,6 +5,7 @@ const base = axios.create({
     headers: {
         'apikey': 'sb_publishable_xoy32Y57BLqTa_vkXRMHhQ_yHJGlklO',
         'content-Type': 'application/json',
+        'Prefer': 'return=representation',
     }
 });
 

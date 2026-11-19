@@ -16,8 +16,29 @@ export async function getById(id) {
 
 export async function getFeatured() {
     const response = await api.get(
-        '/pets?select=*,categories(name)&status=eq.Available&order=created_at.desc&limit=4'
+        '/pets?select=*,categories(name)&status=eq.Available&order=created_at.desc&limit=6'
     );
+
+    return response.data;
+}
+
+export async function addPet(petData) {
+    const response = await api.post('/pets', petData);
+
+    return response.data;
+}
+
+export async function updatePet(id, petData) {
+    const response = await api.patch(
+        `/pets?id=eq.${id}`,
+        petData
+    );
+
+    return response.data;
+}
+
+export async function deletePet(id) {
+    const response = await api.delete(`/pets?id=eq.${id}`);
 
     return response.data;
 }

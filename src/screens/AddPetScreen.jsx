@@ -1,4 +1,3 @@
-
 import {
     View,
     Text,
@@ -6,55 +5,69 @@ import {
     TextInput,
     ScrollView,
     Image,
+    Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import styles from "../styles/AddPetScreen.styles";
 import { useEffect, useState } from "react";
-import { MY_PETS } from "../data/pets";
+import { petsApi, categoryApi } from "../api";
 
 export default function AddPetScreen({
     navigation,
     route,
-    id,
 }) {
-
     const petId = route.params?.petId;
-
     const isEditing = Boolean(petId);
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [categories, setCategories] = useState([]);
 
     const [form, setForm] = useState({
         name: "",
         species: "",
         age: "",
-        gender: "",
-        size: "",
         location: "",
         description: "",
         imageUrl: "",
     });
 
     useEffect(() => {
-        if (isEditing) {
-            const pet = MY_PETS.find(
-                (item) => item.id === petId
-            );
+        const loadData = async () => {
+            try {
+                const categoryData = await categoryApi.getAll();
+                setCategories(categoryData);
 
-            if (pet) {
-                setForm({
-                    name: pet.name,
-                    species: pet.species,
-                    breed: pet.breed,
-                    age: String(pet.age),
-                    gender: pet.gender,
-                    size: pet.size,
-                    location: pet.location,
-                    description: pet.description,
-                    imageUrl: pet.imageUrl,
-                });
+                if (isEditing) {
+                    const pet = await petsApi.getById(petId);
+
+                    if (!pet) {
+                        Alert.alert("Error", "Pet not found.");
+                        navigation.goBack();
+                        return;
+                    }
+
+                    setForm({
+                        name: pet.name || "",
+                        species: pet.category_id || "",
+                        age: String(pet.age ?? ""),
+                        location: pet.location || "",
+                        description: pet.description || "",
+                        imageUrl: pet.image_url || "",
+                    });
+                }
+            } catch (error) {
+                console.log(
+                    "Error loading pet data:",
+                    error.response?.data || error.message
+                );
+
+                Alert.alert("Error", "Could not load pet information.");
             }
-        }
+        };
+
+        loadData();
     }, [petId, isEditing]);
 
     const updateField = (field, value) => {
@@ -62,6 +75,62 @@ export default function AddPetScreen({
             ...prev,
             [field]: value,
         }));
+    };
+
+    const handleSubmit = async () => {
+        if (!form.name.trim() || !form.species) {
+            Alert.alert(
+                "Missing information",
+                "Please enter a pet name and select a species."
+            );
+            return;
+        }
+
+        const selectedCategory = categories.find(
+            (category) => category.id === form.species
+        );
+
+        if (!selectedCategory) {
+            Alert.alert("Error", "Please select a valid species.");
+            return;
+        }
+
+        const petData = {
+            name: form.name.trim(),
+            category_id: selectedCategory.id,
+            age: form.age.trim() || null,
+            location: form.location.trim(),
+            description: form.description.trim(),
+            image_url: form.imageUrl.trim() || null,
+            ...(isEditing ? {} : { status: "Available" }),
+        };
+
+        try {
+            setIsSubmitting(true);
+
+            if (isEditing) {
+                await petsApi.updatePet(petId, petData);
+                Alert.alert("Success", "Pet updated successfully!");
+            } else {
+                await petsApi.addPet(petData);
+                Alert.alert("Success", "Pet published successfully!");
+            }
+
+            navigation.goBack();
+
+        } catch (error) {
+            console.log(
+                "Error saving pet:",
+                error.response?.data || error.message
+            );
+
+            Alert.alert(
+                "Error",
+                "Something went wrong. Please try again."
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -110,7 +179,10 @@ export default function AddPetScreen({
                         value={form.imageUrl}
                         onChangeText={(value) => updateField("imageUrl", value)}
                         autoCapitalize="none"
-                        keyboardType="url"
+                        autoCorrect={false}
+                        keyboardType="default"
+                        contextMenuHidden={false}
+                        editable={true}
                     />
 
                     {form.imageUrl.trim() !== "" && (
@@ -131,7 +203,7 @@ export default function AddPetScreen({
                         value={form.name}
                         placeholder="Enter pet name"
                         placeholderTextColor="#777D74"
-                    // onChangeText={(value) => updateField("name", value)}
+                        onChangeText={(value) => updateField("name", value)}
                     />
                 </View>
 
@@ -139,24 +211,22 @@ export default function AddPetScreen({
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Species</Text>
                         <View style={styles.optionRow}>
-                            {["Dog", "Cat", "Other"].map((item) => (
+                            {categories.map((item) => (
                                 <Pressable
-                                    key={item}
+                                    key={item.id}
                                     style={[
                                         styles.optionChip,
-                                        form.species.toLowerCase() === item.toLowerCase() &&
-                                        styles.selectedOptionChip,
+                                        form.species === item.id && styles.selectedOptionChip,
                                     ]}
-                                    onPress={() => updateField("species", item.toLowerCase())}
+                                    onPress={() => updateField("species", item.id)}
                                 >
                                     <Text
                                         style={[
                                             styles.optionText,
-                                            form.species.toLowerCase() === item.toLowerCase() &&
-                                            styles.selectedOptionText,
+                                            form.species === item.id && styles.selectedOptionText,
                                         ]}
                                     >
-                                        {item}
+                                        {item.name}
                                     </Text>
                                 </Pressable>
                             ))}
@@ -170,7 +240,7 @@ export default function AddPetScreen({
                             value={form.age}
                             placeholder="e.g. 2 years"
                             placeholderTextColor="#777D74"
-                            // onChangeText={(value) => updateField("age", value)}
+                            onChangeText={(value) => updateField("age", value)}
                             keyboardType="numeric"
                         />
                     </View>
@@ -197,7 +267,7 @@ export default function AddPetScreen({
                         style={[styles.input, styles.textArea]}
                         placeholder="Tell us about your pet's personality, habits and needs..."
                         value={form.description}
-                        // onChangeText={(value) => updateField("description", value)}
+                        onChangeText={(value) => updateField("description", value)}
                         placeholderTextColor="#777D74"
                         multiline
                         numberOfLines={5}
@@ -205,10 +275,19 @@ export default function AddPetScreen({
                     />
                 </View>
 
-                <Pressable style={styles.submitButton}>
+                <Pressable
+                    style={styles.submitButton}
+                    onPress={handleSubmit}
+                    disabled={isSubmitting}
+                >
                     <Text style={styles.submitButtonText}>
-                        Publish Pet
+                        {isSubmitting
+                            ? "Saving..."
+                            : isEditing
+                                ? "Update Pet"
+                                : "Publish Pet"}
                     </Text>
+
                     <Ionicons name="paw" size={18} color="#FFFFFF" />
                 </Pressable>
 
