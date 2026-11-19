@@ -158,17 +158,6 @@ export default function AddPetScreen({
                         : "Help a furry friend find their forever home."}
                 </Text>
 
-                {/* Image Upload */}
-                {/* <Text style={styles.sectionTitle}>Pet Photo</Text>
-
-                <Pressable style={styles.imageUpload}>
-                    <Ionicons name="camera-outline" size={32} color="#58745A" />
-                    <Text style={styles.uploadTitle}>Upload a photo</Text>
-                    <Text style={styles.uploadSubtitle}>
-                        Add a clear photo of your pet
-                    </Text>
-                </Pressable> */}
-
                 <View style={styles.inputGroup}>
                     <Text style={styles.label}>Pet Image URL</Text>
 

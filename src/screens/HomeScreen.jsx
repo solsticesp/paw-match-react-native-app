@@ -31,18 +31,18 @@ export default function HomeScreen({ navigation }) {
             .catch(error => Alert.alert("Error", error.message));
     }, []);
 
-const handleRefresh = async () => {
-    setRefreshing(true);
+    const handleRefresh = async () => {
+        setRefreshing(true);
 
-    try {
-        const data = await petsApi.getFeatured();
-        setFeaturedPets(data);
-    } catch (error) {
-        Alert.alert('Error', error.message);
-    } finally {
-        setRefreshing(false);
-    }
-};
+        try {
+            const data = await petsApi.getFeatured();
+            setFeaturedPets(data);
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        } finally {
+            setRefreshing(false);
+        }
+    };
 
     const renderHeader = () => (
         <View>
@@ -64,22 +64,6 @@ const handleRefresh = async () => {
                 </Pressable>
             </View>
 
-            {/* Search */}
-            {/* <Pressable
-                style={styles.searchBar}
-                onPress={() =>
-                    navigation.navigate("PetStack", {
-                        screen: "Search",
-                    })
-                }
-            >
-                <Ionicons name="search-outline" size={20} color="#888" />
-                <Text style={styles.searchPlaceholder}>
-                    Search Pets...
-                </Text>
-            </Pressable> */}
-
-            {/* Banner */}
             <View style={styles.banner}>
                 <View style={styles.bannerTextContainer}>
                     <Text style={styles.bannerTitle}>

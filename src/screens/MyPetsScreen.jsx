@@ -105,7 +105,6 @@ export default function MyPetsScreen({ navigation }) {
         }, [])
     );
 
-    // Delete pet
     const handleDelete = (id) => {
         Alert.alert(
             "Delete Pet",
@@ -143,12 +142,11 @@ export default function MyPetsScreen({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
+        <SafeAreaView style={styles.container} edges={["top"]}>
             <ScrollView
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Header */}
                 <View style={styles.header}>
                     <Text style={styles.title}>My Pets</Text>
 

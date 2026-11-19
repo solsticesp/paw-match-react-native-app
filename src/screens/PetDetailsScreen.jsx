@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, Pressable } from "react-native";
+import { View, Text, Image, ScrollView, Pressable, RefreshControl, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from 'react';
@@ -12,12 +12,14 @@ export default function PetDetailsScreen({
 }) {
     const { petId } = route.params;
     const [pet, setPet] = useState(null);
+    const [refreshing, setRefreshing] = useState(false);
+
 
     useEffect(() => {
         petsApi.getById(petId)
             .then(result => setPet(result))
             .catch(error => Alert.alert("Error", error.message))
-            // .finally(() => setLoading(false));
+        // .finally(() => setLoading(false));
     }, [petId]);
 
     if (!pet) {
@@ -30,10 +32,26 @@ export default function PetDetailsScreen({
 
     const category = pet.categories?.name || "Pet";
 
+    const handleRefresh = async () => {
+        setRefreshing(true);
+
+        try {
+            const data = await petsApi.getById(petId);
+            setPet(data);
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
     return (
         <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+                refreshControl={<RefreshControl refreshing={false} onRefresh={handleRefresh} />}
+                showsVerticalScrollIndicator={false}
+            >
                 <View>
                     <Image
                         source={{ uri: pet.image_url }}
