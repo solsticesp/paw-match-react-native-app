@@ -1,17 +1,26 @@
 import axios from 'axios';
 
 const base = axios.create({
-    baseURL: 'https://tnrnmqyhuusbbqpfkitz.supabase.co/',
+    baseURL: process.env.EXPO_PUBLIC_SUPABASE_URL,
     headers: {
-        'apikey': 'sb_publishable_xoy32Y57BLqTa_vkXRMHhQ_yHJGlklO',
+        'apikey': process.env.EXPO_PUBLIC_SUPABASE_KEY,
         'content-Type': 'application/json',
         'Prefer': 'return=representation',
     }
 });
 
-const api = axios.create({
+export const api = axios.create({
     ...base.defaults,
     baseURL: `${base.defaults.baseURL}/rest/v1`
-})
+});
 
-export default api;
+export const auth = axios.create({
+    ...base.defaults,
+    baseURL: `${base.defaults.baseURL}/auth/v1`
+});
+
+export const storage = axios.create({
+    ...base.defaults,
+    baseURL: `${base.defaults.baseURL}/storage/v1`
+});
+
