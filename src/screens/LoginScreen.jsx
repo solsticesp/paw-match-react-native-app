@@ -5,10 +5,23 @@ import { useState } from "react";
 import { useUserContext } from "../contexts/user/UserContext";
 
 export default function LoginScreen({ navigation }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
     const { login } = useUserContext();
+
+    const [values, setValues] = useState({
+        email: '',
+        password: '',
+    });
+
+    const changeHandler = (name, value) => {
+        setValues(state => ({
+            ...state,
+            [name]: value
+        }));
+    };
+
+    const submitHandler = async () => {
+        await login(values.email, values.password);
+    }
 
     const signUpHandler = () => {
         navigation.navigate('SignUp');
@@ -38,20 +51,20 @@ export default function LoginScreen({ navigation }) {
                     <TextInput
                         style={styles.input}
                         placeholder="Email Address"
-                        onChangeText={setEmail}
-                        value={email}
+                        onChangeText={(text) => changeHandler('email', text)}
+                        value={values.email}
                         keyboardType="email-address"
                     />
 
                     <TextInput
                         style={styles.input}
                         placeholder="Password"
-                        onChangeText={setPassword}
-                        value={password}
+                        onChangeText={(text) => changeHandler('password', text)}
+                        value={values.password}
                         secureTextEntry
                     />
 
-                    <Pressable style={styles.primaryButton} onPress={login}>
+                    <Pressable style={styles.primaryButton} onPress={submitHandler}>
                         <Text style={styles.primaryButtonText}>Login</Text>
                     </Pressable>
                 </View>

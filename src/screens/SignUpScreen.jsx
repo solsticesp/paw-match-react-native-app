@@ -1,8 +1,31 @@
 import styles from "../styles/SignUpScreen.styles";
 import { View, Text, TextInput, Pressable, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { useUserContext } from "../contexts/user/UserContext";
 
 export default function SignUpScreen({ navigation }) {
+    const { register } = useUserContext();
+
+    const [values, setValues] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+
+    const changeHandler = (name, value) => {
+        setValues(state => ({
+            ...state,
+            [name]: value
+        }));
+    };
+
+    const submitHandler = async () => {
+        await register(values.email, values.password, values.firstName, values.lastName);
+    }
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -26,32 +49,40 @@ export default function SignUpScreen({ navigation }) {
                 <View style={styles.form}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Full Name"
-                    // onChangeText={onChangeText}
-                    // value={text}
+                        placeholder="First Name"
+                        onChangeText={(text) => changeHandler('firstName', text)}
+                        value={values.firstName}
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Last Name"
+                        onChangeText={(text) => changeHandler('lastName', text)}
+                        value={values.lastName}
                     />
                     <TextInput
                         style={styles.input}
                         placeholder="Email Address"
-                    // onChangeText={onChangeText}
-                    // value={text}
+                        onChangeText={(text) => changeHandler('email', text)}
+                        value={values.email}
+                        keyboardType="email-address"
                     />
                     <TextInput
                         style={styles.input}
                         placeholder="Password"
-                        // onChangeText={onChangeText}
-                        // value={text}
+                        onChangeText={(text) => changeHandler('password', text)}
+                        value={values.password}
                         secureTextEntry
                     />
 
                     <TextInput
                         style={styles.input}
                         placeholder="Repeat Password"
-                        // onChangeText={onChangeText}
-                        // value={text}
+                        onChangeText={(text) => changeHandler('confirmPassword', text)}
+                        value={values.confirmPassword}
                         secureTextEntry
                     />
-                    <Pressable style={styles.primaryButton}>
+                    <Pressable style={styles.primaryButton} onPress={submitHandler}>
                         <Text style={styles.primaryButtonText}>Sign Up</Text>
                     </Pressable>
                 </View>

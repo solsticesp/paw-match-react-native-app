@@ -13,14 +13,11 @@ import { useUserContext } from "../contexts/user/UserContext";
 export default function HomeScreen({ navigation }) {
     const { user } = useUserContext();
 
-    const name = `${user?.first_name || ""} ${user?.last_name || ""}`.trim();
+    const firstName = user?.user_metadata?.first_name || '';
 
-    const initials = name
-        .split(" ")
-        .filter(Boolean)
-        .map(part => part[0])
-        .join("")
-        .toUpperCase();
+    const lastName = user?.user_metadata?.last_name || '';
+
+    const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 
     const [featuredPets, setFeaturedPets] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
@@ -48,7 +45,7 @@ export default function HomeScreen({ navigation }) {
         <View>
             <View style={styles.topRow}>
                 <View>
-                    <Text style={styles.greeting}>Hello, {name}</Text>
+                    <Text style={styles.greeting}>Hello, {firstName}</Text>
                     <Text style={styles.subtitle}>
                         Let's find a pet a home ❤️
                     </Text>

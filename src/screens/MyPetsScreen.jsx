@@ -81,7 +81,6 @@ export default function MyPetsScreen({ navigation }) {
     const [pets, setPets] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Fetch all pets from Supabase
     const fetchPets = async () => {
         try {
             const data = await petsApi.getAll();

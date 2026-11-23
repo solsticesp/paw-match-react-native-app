@@ -4,7 +4,7 @@ const base = axios.create({
     baseURL: process.env.EXPO_PUBLIC_SUPABASE_URL,
     headers: {
         'apikey': process.env.EXPO_PUBLIC_SUPABASE_KEY,
-        'content-Type': 'application/json',
+        'Content-Type': 'application/json',
         'Prefer': 'return=representation',
     }
 });
