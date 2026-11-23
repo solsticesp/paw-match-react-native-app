@@ -6,61 +6,76 @@ import {
     TextInput,
     Pressable,
     Alert,
+    RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import styles from "../styles/SearchFiltersScreen.styles";
-
-// import { PETS } from "../data/pets";
-import { petsApi } from '../api';
 import PetCardHorizontal from "../components/PetCardHorizontal";
-
-const FILTERS = ["All", "Dogs", "Cats", "Other"];
-
+import { petsApi, categoryApi } from '../api';
+import FilterChip from "../components/FilterChip";
+import ScreenHeader from "../components/ScreenHeader";
 
 export default function SearchFiltersScreen({
     navigation,
 }) {
+    const [categories, setCategories] = useState([]);
     const [selectedFilter, setSelectedFilter] = useState("All");
     const [search, setSearch] = useState("");
     const [pets, setPets] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+
+    const fetchData = async () => {
+        try {
+            const [petsResult, categoriesResult] = await Promise.all([
+                petsApi.getAll(),
+                categoryApi.getAll(),
+            ]);
+
+            setPets(petsResult);
+            setCategories(categoriesResult);
+        } catch (error) {
+            Alert.alert("Error", error.message);
+        }
+    };
 
     useEffect(() => {
-        petsApi.getAll()
-            .then(result => setPets(result))
-            .catch((error) => Alert.alert('Error', error.message))
+        fetchData();
     }, []);
+
+    const filters = [
+        "All",
+        ...categories.map((category) => category.name),
+    ];
 
     const filteredPets = pets.filter((pet) => {
         const category = pet.categories?.name?.toLowerCase();
 
         const matchesFilter =
             selectedFilter === "All" ||
-            category === selectedFilter.toLowerCase().replace(/s$/, "");
+            category === selectedFilter.toLowerCase();
 
         const searchText = search.toLowerCase();
 
         const matchesSearch =
             pet.name.toLowerCase().includes(searchText) ||
-            category?.includes(searchText) 
+            category?.includes(searchText);
 
         return matchesFilter && matchesSearch;
     });
 
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await fetchData();
+        setRefreshing(false);
+    };
+
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
-
-            <View style={styles.header}>
-                <Pressable
-                    style={styles.backButton}
-                    onPress={() => navigation.goBack()}
-                >
-                    <Ionicons name="arrow-back" size={24} color="#333" />
-                </Pressable>
-
-                <Text style={styles.title}>Find a Pet</Text>
-            </View>
+            <ScreenHeader
+                title="Find a Pet"
+                onBack={() => navigation.goBack()}
+            />
 
             <TextInput
                 style={styles.searchInput}
@@ -72,33 +87,17 @@ export default function SearchFiltersScreen({
 
             <View style={styles.filterGroup}>
                 <View style={styles.optionsRow}>
-                    {FILTERS.map((filter) => {
-                        const isActive = selectedFilter === filter;
-
-                        return (
-                            <Pressable
-                                key={filter}
-                                style={[
-                                    styles.option,
-                                    isActive && styles.optionActive,
-                                ]}
-                                onPress={() => setSelectedFilter(filter)}
-                            >
-                                <Text
-                                    style={[
-                                        styles.optionText,
-                                        isActive && styles.optionTextActive,
-                                    ]}
-                                >
-                                    {filter}
-                                </Text>
-                            </Pressable>
-                        );
-                    })}
+                    {filters.map((filter) => (
+                        <FilterChip
+                            key={filter}
+                            label={filter}
+                            isActive={selectedFilter === filter}
+                            onPress={() => setSelectedFilter(filter)}
+                        />
+                    ))}
                 </View>
             </View>
 
-            {/* Pet List */}
             <FlatList
                 data={filteredPets}
                 renderItem={({ item }) => (
@@ -111,6 +110,14 @@ export default function SearchFiltersScreen({
                         }
                     />
                 )}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        tintColor="#777D74"
+                        colors={["#777D74"]}
+                    />
+                }
                 keyExtractor={(item) => String(item.id)}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.content}

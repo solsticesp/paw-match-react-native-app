@@ -11,8 +11,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import styles from "../styles/AddPetScreen.styles";
+import { colors } from "../styles/theme";
 import { useEffect, useState } from "react";
 import { petsApi, categoryApi } from "../api";
+import ScreenHeader from "../components/ScreenHeader";
 
 export default function AddPetScreen({
     navigation,
@@ -139,18 +141,10 @@ export default function AddPetScreen({
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
             >
-                <View style={styles.header}>
-                    <Pressable
-                        style={styles.backButton}
-                        onPress={() => navigation.goBack()}
-                    >
-                        <Ionicons name="arrow-back" size={22} color="#252923" />
-                    </Pressable>
-
-                    <Text style={styles.title}>
-                        {isEditing ? "Edit Pet" : "Add a Pet"}
-                    </Text>
-                </View>
+                <ScreenHeader
+                    title={isEditing ? "Edit Pet" : "Add a Pet"}
+                    onBack={() => navigation.goBack()}
+                />
 
                 <Text style={styles.subtitle}>
                     {isEditing
@@ -158,7 +152,7 @@ export default function AddPetScreen({
                         : "Help a furry friend find their forever home."}
                 </Text>
 
-                <View style={styles.inputGroup}>
+                {/* <View style={styles.inputGroup}>
                     <Text style={styles.label}>Pet Image URL</Text>
 
                     <TextInput
@@ -181,6 +175,48 @@ export default function AddPetScreen({
                             resizeMode="cover"
                         />
                     )}
+                </View> */}
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Pet Photo</Text>
+
+                    <View style={styles.imageUpload}>
+                        {false ? (
+                            <Image
+                                source={{ uri: imageUri }}
+                                style={styles.petImage}
+                                resizeMode="cover"
+                            />
+                        ) : (
+                            <>
+                                <Ionicons
+                                    name="cloud-upload-outline"
+                                    size={36}
+                                    color={colors.primaryDark}
+                                />
+
+                                <Text style={styles.uploadTitle}>
+                                    Upload a pet photo
+                                </Text>
+
+                                <Text style={styles.uploadSubtitle}>
+                                    Choose from gallery or take a photo
+                                </Text>
+                            </>
+                        )}
+                    </View>
+
+                    <View style={styles.imageButtons}>
+                        <Pressable style={styles.imageButton} onPress={() => { }}>
+                            <Ionicons name="images-outline" size={20} color={colors.primaryDark} />
+                            <Text style={styles.imageButtonText}>Gallery</Text>
+                        </Pressable>
+
+                        <Pressable style={styles.imageButton} onPress={() => { }}>
+                            <Ionicons name="camera-outline" size={20} color={colors.primaryDark} />
+                            <Text style={styles.imageButtonText}>Camera</Text>
+                        </Pressable>
+                    </View>
                 </View>
 
                 <Text style={styles.sectionTitle}>Basic Information</Text>

@@ -51,23 +51,6 @@ export default StyleSheet.create({
         flexWrap: "wrap",
         gap: 8,
     },
-    option: {
-        paddingHorizontal: 15,
-        paddingVertical: 9,
-        borderRadius: radius.pill,
-        backgroundColor: "#EEECE6",
-    },
-    optionActive: {
-        backgroundColor: colors.primary,
-    },
-    optionText: {
-        color: colors.text,
-        fontWeight: "600",
-        fontSize: 13,
-    },
-    optionTextActive: {
-        color: colors.surface,
-    },
     applyButton: {
         minHeight: 52,
         borderRadius: radius.pill,

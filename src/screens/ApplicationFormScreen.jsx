@@ -15,6 +15,7 @@ import { useState } from "react";
 import styles from "../styles/ApllicationFormScreen.styles";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ScreenHeader from "../components/ScreenHeader";
 
 export default function ApllicationFormScreen({ navigation, route }) {
     const { pet } = route.params;
@@ -43,22 +44,11 @@ export default function ApllicationFormScreen({ navigation, route }) {
                             keyboardShouldPersistTaps="handled"
                             showsVerticalScrollIndicator={false}
                         >
-                            <View style={styles.header}>
-                                <Pressable
-                                    style={styles.backButton}
-                                    onPress={() => navigation.goBack()}
-                                >
-                                    <Ionicons
-                                        name="arrow-back"
-                                        size={22}
-                                        color="#333"
-                                    />
-                                </Pressable>
 
-                                <Text style={styles.title}>
-                                    Adoption Application
-                                </Text>
-                            </View>
+                            <ScreenHeader
+                                title="Adoption Application"
+                                onBack={() => navigation.goBack()}
+                            />
 
                             <View style={styles.petSummary}>
                                 <Image

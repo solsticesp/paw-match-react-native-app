@@ -39,8 +39,17 @@ export default function SignUpScreen({ navigation }) {
                     <TextInput
                         style={styles.input}
                         placeholder="Password"
-                    // onChangeText={onChangeText}
-                    // value={text}
+                        // onChangeText={onChangeText}
+                        // value={text}
+                        secureTextEntry
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Repeat Password"
+                        // onChangeText={onChangeText}
+                        // value={text}
+                        secureTextEntry
                     />
                     <Pressable style={styles.primaryButton}>
                         <Text style={styles.primaryButtonText}>Sign Up</Text>
