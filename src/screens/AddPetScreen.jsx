@@ -5,7 +5,6 @@ import {
     Pressable,
     TextInput,
     ScrollView,
-    Image,
     Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +15,7 @@ import { colors } from "../styles/theme";
 import { useEffect, useState } from "react";
 import { petsApi, categoryApi } from "../api";
 import ScreenHeader from "../components/ScreenHeader";
+import PhotoPicker from '../components/PhotoPicker';
 
 
 export default function AddPetScreen({
@@ -34,7 +34,7 @@ export default function AddPetScreen({
         age: "",
         location: "",
         description: "",
-        imageUrl: "",
+        imageUrl: null,
     });
 
     useEffect(() => {
@@ -81,6 +81,7 @@ export default function AddPetScreen({
         }));
     };
 
+
     const handleSubmit = async () => {
         if (!form.name.trim() || !form.species) {
             Alert.alert(
@@ -99,18 +100,29 @@ export default function AddPetScreen({
             return;
         }
 
-        const petData = {
-            name: form.name.trim(),
-            category_id: selectedCategory.id,
-            age: form.age.trim() || null,
-            location: form.location.trim(),
-            description: form.description.trim(),
-            image_url: form.imageUrl.trim() || null,
-            ...(isEditing ? {} : { status: "Available" }),
-        };
-
         try {
             setIsSubmitting(true);
+
+            let imageUrl = form.imageUrl;
+
+            // Upload new local image to Supabase Storage
+            if (
+                imageUrl &&
+                (imageUrl.startsWith("file://") ||
+                    imageUrl.startsWith("content://"))
+            ) {
+                imageUrl = await petsApi.saveImage(imageUrl);
+            }
+
+            const petData = {
+                name: form.name.trim(),
+                category_id: selectedCategory.id,
+                age: form.age.trim() || null,
+                location: form.location.trim(),
+                description: form.description.trim(),
+                image_url: imageUrl || null,
+                ...(isEditing ? {} : { status: "Available" }),
+            };
 
             if (isEditing) {
                 await petsApi.updatePet(petId, petData);
@@ -137,6 +149,62 @@ export default function AddPetScreen({
         }
     };
 
+    // const handleSubmit = async () => {
+    //     if (!form.name.trim() || !form.species) {
+    //         Alert.alert(
+    //             "Missing information",
+    //             "Please enter a pet name and select a species."
+    //         );
+    //         return;
+    //     }
+
+    //     const selectedCategory = categories.find(
+    //         (category) => category.id === form.species
+    //     );
+
+    //     if (!selectedCategory) {
+    //         Alert.alert("Error", "Please select a valid species.");
+    //         return;
+    //     }
+
+    //     const petData = {
+    //         name: form.name.trim(),
+    //         category_id: selectedCategory.id,
+    //         age: form.age.trim() || null,
+    //         location: form.location.trim(),
+    //         description: form.description.trim(),
+    //         image_url: form.imageUrl.trim() || null,
+    //         ...(isEditing ? {} : { status: "Available" }),
+    //     };
+
+    //     try {
+    //         setIsSubmitting(true);
+
+    //         if (isEditing) {
+    //             await petsApi.updatePet(petId, petData);
+    //             Alert.alert("Success", "Pet updated successfully!");
+    //         } else {
+    //             await petsApi.addPet(petData);
+    //             Alert.alert("Success", "Pet published successfully!");
+    //         }
+
+    //         navigation.goBack();
+
+    //     } catch (error) {
+    //         console.log(
+    //             "Error saving pet:",
+    //             error.response?.data || error.message
+    //         );
+
+    //         Alert.alert(
+    //             "Error",
+    //             "Something went wrong. Please try again."
+    //         );
+    //     } finally {
+    //         setIsSubmitting(false);
+    //     }
+    // };
+
     const useCurrentLocationHandler = async () => {
         const { status } = await Location.requestForegroundPermissionsAsync();
 
@@ -152,7 +220,7 @@ export default function AddPetScreen({
             longitude: location.coords.longitude,
         });
 
-        updateField("location", `${reverseGeocode[0].city}, ${reverseGeocode[0].country}`)  
+        updateField("location", `${reverseGeocode[0].city}, ${reverseGeocode[0].country}`)
     }
 
     return (
@@ -172,72 +240,7 @@ export default function AddPetScreen({
                         : "Help a furry friend find their forever home."}
                 </Text>
 
-                {/* <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Pet Image URL</Text>
-
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Paste image URL here"
-                        placeholderTextColor="#777D74"
-                        value={form.imageUrl}
-                        onChangeText={(value) => updateField("imageUrl", value)}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        keyboardType="default"
-                        contextMenuHidden={false}
-                        editable={true}
-                    />
-
-                    {form.imageUrl.trim() !== "" && (
-                        <Image
-                            source={{ uri: form.imageUrl }}
-                            style={styles.petImage}
-                            resizeMode="cover"
-                        />
-                    )}
-                </View> */}
-
-                <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Pet Photo</Text>
-
-                    <View style={styles.imageUpload}>
-                        {false ? (
-                            <Image
-                                source={{ uri: imageUri }}
-                                style={styles.petImage}
-                                resizeMode="cover"
-                            />
-                        ) : (
-                            <>
-                                <Ionicons
-                                    name="cloud-upload-outline"
-                                    size={36}
-                                    color={colors.primaryDark}
-                                />
-
-                                <Text style={styles.uploadTitle}>
-                                    Upload a pet photo
-                                </Text>
-
-                                <Text style={styles.uploadSubtitle}>
-                                    Choose from gallery or take a photo
-                                </Text>
-                            </>
-                        )}
-                    </View>
-
-                    <View style={styles.imageButtons}>
-                        <Pressable style={styles.imageButton} onPress={() => { }}>
-                            <Ionicons name="images-outline" size={20} color={colors.primaryDark} />
-                            <Text style={styles.imageButtonText}>Gallery</Text>
-                        </Pressable>
-
-                        <Pressable style={styles.imageButton} onPress={() => { }}>
-                            <Ionicons name="camera-outline" size={20} color={colors.primaryDark} />
-                            <Text style={styles.imageButtonText}>Camera</Text>
-                        </Pressable>
-                    </View>
-                </View>
+                <PhotoPicker onImageSelected={(uri) => updateField("imageUrl", uri)} />
 
                 <Text style={styles.sectionTitle}>Basic Information</Text>
 

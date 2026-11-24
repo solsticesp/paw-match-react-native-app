@@ -41,7 +41,9 @@
             }
           }
         }
-      ]
+      ],
+      "expo-asset",
+      "expo-font"
     ]
   }
 }

@@ -36,59 +36,6 @@ export default StyleSheet.create({
         marginBottom: spacing.md,
         marginTop: spacing.sm,
     },
-    imageUpload: {
-        height: 150,
-        backgroundColor: colors.primaryLight,
-        borderRadius: radius.lg,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderStyle: "dashed",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: spacing.lg,
-        overflow: "hidden",
-    },
-
-    uploadTitle: {
-        fontSize: 14,
-        fontWeight: "700",
-        color: colors.primaryDark,
-        marginTop: spacing.sm,
-    },
-
-    uploadSubtitle: {
-        fontSize: 12,
-        color: colors.textMuted,
-        marginTop: spacing.xs,
-    },
-
-    petImage: {
-        width: "100%",
-        height: "100%",
-    },
-
-    imageButtons: {
-        flexDirection: "row",
-        gap: spacing.md,
-    },
-
-    imageButton: {
-        flex: 1,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: spacing.sm,
-        paddingVertical: spacing.md,
-        backgroundColor: colors.primaryLight,
-        borderRadius: radius.md,
-    },
-
-    imageButtonText: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: colors.primaryDark,
-    },
-
     inputGroup: {
         marginBottom: spacing.md,
     },

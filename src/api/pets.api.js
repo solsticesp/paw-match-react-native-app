@@ -1,4 +1,6 @@
-import { api } from './api';
+import { api, storage } from './api';
+import * as FileSystem from "expo-file-system/legacy";
+import { decode } from "base64-arraybuffer";
 
 export async function getAll() {
     const response = await api.get('/pets?select=*,categories(name)');
@@ -42,3 +44,53 @@ export async function deletePet(id) {
 
     return response.data;
 }
+
+
+
+export async function saveImage(imageUri) {
+    try {
+        const extension = imageUri
+            .split("?")[0]
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+        const mimeTypes = {
+            jpg: "image/jpeg",
+            jpeg: "image/jpeg",
+            png: "image/png",
+            webp: "image/webp",
+        };
+
+        const contentType = mimeTypes[extension] || "image/jpeg";
+
+        const base64 = await FileSystem.readAsStringAsync(imageUri, {
+            encoding: FileSystem.EncodingType.Base64,
+        });
+
+        const fileData = decode(base64);
+
+        const fileName = `${Date.now()}.${extension}`;
+
+        await storage.post(`/pets/${fileName}`, fileData, {
+            headers: {
+                "Content-Type": contentType,
+                "x-upsert": "false",
+            },
+        });
+
+        const publicUrl =
+            `${storage.defaults.baseURL}/public/pets/${fileName}`;
+
+        return publicUrl;
+
+    } catch (error) {
+        console.log(
+            "Image upload error:",
+            error.response?.data || error.message
+        );
+
+        throw error;
+    }
+}
+
