@@ -6,23 +6,29 @@ export default StyleSheet.create({
         flex: 1,
         backgroundColor: colors.background,
     },
+
     content: {
         padding: spacing.md,
         paddingBottom: 28,
+    },
+
+    petRow: {
+        justifyContent: "space-between",
+        marginBottom: 12,
     },
     topRow: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        marginBottom: 18,
+        marginBottom: 36,
     },
     greeting: {
-        fontSize: 25,
+        fontSize: 32,
         fontWeight: "800",
         color: colors.text,
     },
     subtitle: {
-        fontSize: 14,
+        fontSize: 18,
         color: colors.textMuted,
         marginTop: 4,
     },
@@ -31,35 +37,58 @@ export default StyleSheet.create({
         height: 42,
         borderRadius: 21,
         backgroundColor: colors.primaryLight,
-    },
-    searchBar: {
-        height: 48,
-        borderRadius: radius.pill,
-        backgroundColor: colors.input,
-        flexDirection: "row",
         alignItems: "center",
-        paddingHorizontal: 16,
-        marginBottom: 18,
+        justifyContent: "center",
     },
-    searchPlaceholder: {
-        color: colors.textMuted,
-        marginLeft: 8,
+    avatarText: {
         fontSize: 14,
+        color: colors.primaryDark,
+        fontWeight: "600",
     },
     banner: {
-        height: 145,
+        flexDirection: "row",
+        height: 220,
         borderRadius: radius.lg,
         backgroundColor: "#A6B99A",
         overflow: "hidden",
-        padding: 18,
+        marginBottom: 46,
+    },
+    bannerTextContainer: {
+        flex: 1.15,
+        padding: 16,
         justifyContent: "center",
-        marginBottom: 24,
     },
     bannerTitle: {
         color: colors.surface,
-        fontSize: 22,
+        fontSize: 27,
         fontWeight: "800",
-        width: "55%",
+        lineHeight: 26,
+    },
+    bannerSubtitle: {
+        color: colors.surface,
+        fontSize: 12,
+        lineHeight: 17,
+        marginTop: 7,
+        marginBottom: 14,
+    },
+    bannerButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        alignSelf: "flex-start",
+        backgroundColor: colors.surface,
+        borderRadius: radius.pill,
+        paddingVertical: 15,
+        paddingHorizontal: 18,
+        gap: 6,
+    },
+    bannerButtonText: {
+        color: colors.primaryDark,
+        fontSize: 14,
+        fontWeight: "700",
+    },
+    bannerImage: {
+        flex: 0.85,
+        height: "100%",
     },
     sectionHeader: {
         flexDirection: "row",
@@ -96,37 +125,5 @@ export default StyleSheet.create({
     },
     categoryTextActive: {
         color: colors.surface,
-    },
-    petGrid: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
-        gap: 12,
-    },
-    petCard: {
-        width: "48%",
-        backgroundColor: colors.surface,
-        borderRadius: radius.md,
-        overflow: "hidden",
-        borderWidth: 1,
-        borderColor: colors.border,
-    },
-    petImage: {
-        width: "100%",
-        height: 128,
-        backgroundColor: colors.primaryLight,
-    },
-    petInfo: {
-        padding: 10,
-    },
-    petName: {
-        fontSize: 15,
-        fontWeight: "800",
-        color: colors.text,
-    },
-    petMeta: {
-        color: colors.textMuted,
-        fontSize: 12,
-        marginTop: 4,
     },
 });
