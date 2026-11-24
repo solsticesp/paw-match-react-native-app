@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { petsApi, categoryApi } from "../api";
 import ScreenHeader from "../components/ScreenHeader";
 import PhotoPicker from '../components/PhotoPicker';
+import { useUserContext } from '../contexts/user/UserContext';
 
 
 export default function AddPetScreen({
@@ -24,6 +25,7 @@ export default function AddPetScreen({
 }) {
     const petId = route.params?.petId;
     const isEditing = Boolean(petId);
+    const { user } = useUserContext();
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [categories, setCategories] = useState([]);
@@ -105,7 +107,6 @@ export default function AddPetScreen({
 
             let imageUrl = form.imageUrl;
 
-            // Upload new local image to Supabase Storage
             if (
                 imageUrl &&
                 (imageUrl.startsWith("file://") ||
@@ -121,7 +122,12 @@ export default function AddPetScreen({
                 location: form.location.trim(),
                 description: form.description.trim(),
                 image_url: imageUrl || null,
-                ...(isEditing ? {} : { status: "Available" }),
+                ...(isEditing
+                    ? {}
+                    : {
+                        status: "Available",
+                        user_id: user?.id,
+                    }),
             };
 
             if (isEditing) {
@@ -148,62 +154,6 @@ export default function AddPetScreen({
             setIsSubmitting(false);
         }
     };
-
-    // const handleSubmit = async () => {
-    //     if (!form.name.trim() || !form.species) {
-    //         Alert.alert(
-    //             "Missing information",
-    //             "Please enter a pet name and select a species."
-    //         );
-    //         return;
-    //     }
-
-    //     const selectedCategory = categories.find(
-    //         (category) => category.id === form.species
-    //     );
-
-    //     if (!selectedCategory) {
-    //         Alert.alert("Error", "Please select a valid species.");
-    //         return;
-    //     }
-
-    //     const petData = {
-    //         name: form.name.trim(),
-    //         category_id: selectedCategory.id,
-    //         age: form.age.trim() || null,
-    //         location: form.location.trim(),
-    //         description: form.description.trim(),
-    //         image_url: form.imageUrl.trim() || null,
-    //         ...(isEditing ? {} : { status: "Available" }),
-    //     };
-
-    //     try {
-    //         setIsSubmitting(true);
-
-    //         if (isEditing) {
-    //             await petsApi.updatePet(petId, petData);
-    //             Alert.alert("Success", "Pet updated successfully!");
-    //         } else {
-    //             await petsApi.addPet(petData);
-    //             Alert.alert("Success", "Pet published successfully!");
-    //         }
-
-    //         navigation.goBack();
-
-    //     } catch (error) {
-    //         console.log(
-    //             "Error saving pet:",
-    //             error.response?.data || error.message
-    //         );
-
-    //         Alert.alert(
-    //             "Error",
-    //             "Something went wrong. Please try again."
-    //         );
-    //     } finally {
-    //         setIsSubmitting(false);
-    //     }
-    // };
 
     const useCurrentLocationHandler = async () => {
         const { status } = await Location.requestForegroundPermissionsAsync();

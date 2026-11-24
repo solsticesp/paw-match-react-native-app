@@ -3,7 +3,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import { decode } from "base64-arraybuffer";
 
 export async function getAll() {
-    const response = await api.get('/pets?select=*,categories(name)');
+    const response = await api.get('/pets?select=*,categories(name)&order=created_at.desc');
 
     return response.data;
 }
@@ -40,12 +40,28 @@ export async function updatePet(id, petData) {
 }
 
 export async function deletePet(id) {
-    const response = await api.delete(`/pets?id=eq.${id}`);
+    try {
+        const pet = await getById(id);
 
-    return response.data;
+        if (pet?.image_url) {
+            const fileName = pet.image_url.split('/').pop();
+
+            await storage.delete(`/pets/${fileName}`);
+        }
+
+        const response = await api.delete(`/pets?id=eq.${id}`);
+
+        return response.data;
+
+    } catch (error) {
+        console.log(
+            "Delete pet error:",
+            error.response?.data || error.message
+        );
+
+        throw error;
+    }
 }
-
-
 
 export async function saveImage(imageUri) {
     try {

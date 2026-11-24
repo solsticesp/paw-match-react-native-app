@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-
 import {
     View,
     Text,
@@ -7,8 +6,8 @@ import {
     ScrollView,
     Alert,
     ActivityIndicator,
+    RefreshControl,
 } from "react-native";
-
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
@@ -20,9 +19,16 @@ import { petsApi } from "../api";
 export default function MyPetsScreen({ navigation }) {
     const [pets, setPets] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
-    const fetchPets = async () => {
+    const fetchPets = async (refresh = false) => {
         try {
+            if (refresh) {
+                setIsRefreshing(true);
+            } else {
+                setIsLoading(true);
+            }
+
             const data = await petsApi.getAll();
             setPets(data);
         } catch (error) {
@@ -34,10 +40,10 @@ export default function MyPetsScreen({ navigation }) {
             Alert.alert("Error", "Could not load pets.");
         } finally {
             setIsLoading(false);
+            setIsRefreshing(false);
         }
     };
 
-    // Refresh the list whenever the screen becomes active
     useFocusEffect(
         useCallback(() => {
             fetchPets();
@@ -85,6 +91,14 @@ export default function MyPetsScreen({ navigation }) {
             <ScrollView
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={() => fetchPets(true)}
+                        tintColor="#58745A"
+                        colors={["#58745A"]}
+                    />
+                }
             >
                 <View style={styles.header}>
                     <Text style={styles.title}>My Pets</Text>
@@ -102,19 +116,16 @@ export default function MyPetsScreen({ navigation }) {
                     Manage the pets you've listed for adoption.
                 </Text>
 
-                {/* Loading */}
                 {isLoading ? (
                     <ActivityIndicator size="large" color="#58745A" />
                 ) : pets.length === 0 ? (
 
-                    /* Empty State */
                     <View style={styles.petList}>
                         <Text>No pets have been added yet.</Text>
                     </View>
 
                 ) : (
 
-                    /* Pet List */
                     <View style={styles.petList}>
                         {pets.map((pet) => (
                             <MyPetCard

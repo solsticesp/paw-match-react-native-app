@@ -24,3 +24,14 @@ export const storage = axios.create({
     baseURL: `${base.defaults.baseURL}/storage/v1/object`
 });
 
+export const setAuthToken = (token) => {
+    const clients = [api, auth, storage];
+    
+    clients.forEach((client) => {
+        if (token) {
+            client.defaults.headers.common.Authorization = `Bearer ${token}`;
+        } else {
+            delete client.defaults.headers.common.Authorization;
+        }
+    });
+};

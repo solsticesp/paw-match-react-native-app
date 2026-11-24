@@ -1,11 +1,21 @@
 
+import { useEffect } from 'react';
 import { UserContext } from './UserContext';
 import { authApi } from '../../api';
 import { Alert } from 'react-native';
 import useSecureState from '../../hooks/useSecureState';
+import { setAuthToken } from '../../api/api';
 
 export default function UserProvider({ children }) {
     const [state, setState] = useSecureState('user', null);
+
+    useEffect(() => {
+        if (state?.accessToken) {
+            setAuthToken(state.accessToken);
+        } else {
+            setAuthToken(null);
+        }
+    }, [state?.accessToken]);
 
     const register = async (email, password, firstName, lastName) => {
         try {
@@ -29,11 +39,13 @@ export default function UserProvider({ children }) {
         try {
             const result = await authApi.login(email, password);
 
-            setState(result.user);
+            setState({
+                ...result.user,
+                accessToken: result.access_token,
+            });
 
-            return result;
         } catch (error) {
-            Alert.alert('Login failed', error.message);
+            console.log(error.response?.data || error.message);
             throw error;
         }
     };
