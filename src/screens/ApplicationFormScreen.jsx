@@ -9,6 +9,7 @@ import {
     Keyboard,
     ScrollView,
     TouchableWithoutFeedback,
+    Alert,
 } from "react-native";
 
 import { useState } from "react";
@@ -16,14 +17,86 @@ import styles from "../styles/ApllicationFormScreen.styles";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ScreenHeader from "../components/ScreenHeader";
+import { useUserContext } from "../contexts/user/UserContext";
+import { applicationsApi } from "../api";
 
 export default function ApllicationFormScreen({ navigation, route }) {
     const { pet } = route.params;
+    const { user } = useUserContext();
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [message, setMessage] = useState("");
+
+
+    const submitHandler = async () => {
+        // Validate required fields
+        if (!fullName.trim() || !email.trim() || !phone.trim()) {
+            Alert.alert(
+                "Missing information",
+                "Please fill in your name, email and phone number."
+            );
+            return;
+        }
+
+        if (!user?.id) {
+            Alert.alert(
+                "Authentication required",
+                "Please log in to submit an application."
+            );
+            return;
+        }
+
+        try {
+            setIsSubmitting(true);
+
+            const applicationData = {
+                pet_id: pet.id,
+                applicant_id: user.id,
+                full_name: fullName.trim(),
+                email: email.trim().toLowerCase(),
+                phone: phone.trim(),
+                message: message.trim() || null,
+            };
+
+            await applicationsApi.createApplication(applicationData);
+
+            Alert.alert(
+                "Application submitted!",
+                `Your application to adopt ${pet.name} has been sent.`,
+                [
+                    {
+                        text: "OK",
+                        onPress: () => navigation.goBack(),
+                    },
+                ]
+            );
+
+        } catch (error) {
+            console.log(
+                "Submit application error:",
+                error.response?.data || error.message
+            );
+
+            if (error.response?.data?.code === "23505") {
+                Alert.alert(
+                    "Already applied",
+                    "You have already submitted an application for this pet."
+                );
+            } else {
+                Alert.alert(
+                    "Something went wrong",
+                    "Your application could not be submitted. Please try again."
+                );
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
 
     return (
         <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
@@ -112,9 +185,16 @@ export default function ApllicationFormScreen({ navigation, route }) {
                                 />
                             </View>
 
-                            <Pressable style={styles.submitButton}>
+                            <Pressable
+                                style={[
+                                    styles.submitButton,
+                                    isSubmitting && { opacity: 0.6 },
+                                ]}
+                                onPress={submitHandler}
+                                disabled={isSubmitting}
+                            >
                                 <Text style={styles.submitButtonText}>
-                                    Submit Application
+                                    {isSubmitting ? "Submitting..." : "Submit Application"}
                                 </Text>
                             </Pressable>
                         </ScrollView>
