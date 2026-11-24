@@ -1,3 +1,4 @@
+import * as Location from 'expo-location';
 import {
     View,
     Text,
@@ -15,6 +16,7 @@ import { colors } from "../styles/theme";
 import { useEffect, useState } from "react";
 import { petsApi, categoryApi } from "../api";
 import ScreenHeader from "../components/ScreenHeader";
+
 
 export default function AddPetScreen({
     navigation,
@@ -134,6 +136,24 @@ export default function AddPetScreen({
             setIsSubmitting(false);
         }
     };
+
+    const useCurrentLocationHandler = async () => {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+
+        if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+        }
+
+        const location = await Location.getCurrentPositionAsync({});
+
+        const reverseGeocode = await Location.reverseGeocodeAsync({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+        });
+
+        updateField("location", `${reverseGeocode[0].city}, ${reverseGeocode[0].country}`)  
+    }
 
     return (
         <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
@@ -284,6 +304,19 @@ export default function AddPetScreen({
                         value={form.location}
                         onChangeText={(value) => updateField("location", value)}
                     />
+                    <Pressable
+                        style={styles.locationButton}
+                        onPress={useCurrentLocationHandler}
+                    >
+                        <Ionicons
+                            name="navigate-outline"
+                            size={17}
+                            color={colors.primary}
+                        />
+                        <Text style={styles.locationButtonText}>
+                            Use my location
+                        </Text>
+                    </Pressable>
                 </View>
 
                 <View style={styles.inputGroup}>

@@ -145,6 +145,21 @@ export default StyleSheet.create({
         minHeight: 120,
         paddingTop: 14,
     },
+    locationButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        alignSelf: "flex-start",
+        gap: 7,
+        marginTop: 8,
+        marginBottom: 5,
+        paddingVertical: 5,
+    },
+
+    locationButtonText: {
+        fontSize: 13,
+        fontWeight: "600",
+        color: colors.primary,
+    },
     submitButton: {
         minHeight: 54,
         backgroundColor: colors.primary,
