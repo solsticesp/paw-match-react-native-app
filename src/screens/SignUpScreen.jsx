@@ -1,8 +1,9 @@
 import styles from "../styles/SignUpScreen.styles";
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, ScrollView, Platform, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { useUserContext } from "../contexts/user/UserContext";
+import { validateSignUp } from "../utils/validation";
 
 export default function SignUpScreen({ navigation }) {
     const { register } = useUserContext();
@@ -23,8 +24,20 @@ export default function SignUpScreen({ navigation }) {
     };
 
     const submitHandler = async () => {
-        await register(values.email, values.password, values.firstName, values.lastName);
-    }
+        const error = validateSignUp(values);
+
+        if (error) {
+            Alert.alert("Validation Error", error);
+            return;
+        }
+
+        await register(
+            values.email.trim().toLowerCase(),
+            values.password,
+            values.firstName.trim(),
+            values.lastName.trim()
+        );
+    };
 
     return (
         <KeyboardAvoidingView
@@ -52,6 +65,8 @@ export default function SignUpScreen({ navigation }) {
                         placeholder="First Name"
                         onChangeText={(text) => changeHandler('firstName', text)}
                         value={values.firstName}
+                        autoCorrect={false}
+                        autoCapitalize="words"
                     />
 
                     <TextInput
@@ -59,6 +74,8 @@ export default function SignUpScreen({ navigation }) {
                         placeholder="Last Name"
                         onChangeText={(text) => changeHandler('lastName', text)}
                         value={values.lastName}
+                        autoCorrect={false}
+                        autoCapitalize="words"
                     />
                     <TextInput
                         style={styles.input}
@@ -66,6 +83,8 @@ export default function SignUpScreen({ navigation }) {
                         onChangeText={(text) => changeHandler('email', text)}
                         value={values.email}
                         keyboardType="email-address"
+                        autoCapitalize="none"
+                        autoCorrect={false}
                     />
                     <TextInput
                         style={styles.input}

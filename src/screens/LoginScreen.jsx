@@ -1,8 +1,9 @@
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Alert } from "react-native";
 import styles from "../styles/LoginScreen.styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { useUserContext } from "../contexts/user/UserContext";
+import { validateLogin } from "../utils/validation";
 
 export default function LoginScreen({ navigation }) {
     const { login } = useUserContext();
@@ -20,7 +21,20 @@ export default function LoginScreen({ navigation }) {
     };
 
     const submitHandler = async () => {
-        await login(values.email, values.password);
+        const error = validateLogin(
+            values.email,
+            values.password
+        );
+
+        if (error) {
+            Alert.alert("Validation Error", error);
+            return;
+        }
+
+        await login(
+            values.email.trim().toLowerCase(),
+            values.password
+        );
     }
 
     const signUpHandler = () => {
@@ -54,6 +68,8 @@ export default function LoginScreen({ navigation }) {
                         onChangeText={(text) => changeHandler('email', text)}
                         value={values.email}
                         keyboardType="email-address"
+                        autoCapitalize="none"
+                        autoCorrect={false}
                     />
 
                     <TextInput
