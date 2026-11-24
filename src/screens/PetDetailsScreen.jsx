@@ -20,7 +20,6 @@ export default function PetDetailsScreen({
         petsApi.getById(petId)
             .then(result => setPet(result))
             .catch(error => Alert.alert("Error", error.message))
-        // .finally(() => setLoading(false));
     }, [petId]);
 
     if (!pet) {
@@ -81,7 +80,7 @@ export default function PetDetailsScreen({
                         <Text style={styles.petName}>{pet.name}</Text>
 
                         <Text style={styles.availability}>
-                            Available
+                            {pet.status}
                         </Text>
                     </View>
 

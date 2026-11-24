@@ -25,6 +25,7 @@ export async function getReceivedApplications(userId) {
     return response.data;
 }
 
+
 export async function updateApplicationStatus(id, status) {
     const response = await api.patch(
         `/applications?id=eq.${id}`,
@@ -32,4 +33,15 @@ export async function updateApplicationStatus(id, status) {
     );
 
     return response.data[0];
+}
+
+export async function acceptApplication(applicationId) {
+    const response = await api.post(
+        '/rpc/accept_adoption_application',
+        {
+            application_id: applicationId,
+        }
+    );
+
+    return response.data;
 }

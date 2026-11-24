@@ -4,18 +4,84 @@ import {
     Image,
     Pressable,
     ScrollView,
+    Alert
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { applicationsApi } from "../api";
 
 import styles from "../styles/ApplicationDetailsScreen.styles";
 
 export default function ApplicationDetailsScreen({ navigation, route }) {
     const { application, type } = route.params;
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const isReceived = type === "received";
-
     const isPending = application.status === "Pending";
+
+
+    const updateStatusHandler = (newStatus) => {
+        Alert.alert(
+            `${newStatus} Application`,
+            `Are you sure you want to ${newStatus.toLowerCase()} this adoption application?`,
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: newStatus,
+                    style: newStatus === "Rejected" ? "destructive" : "default",
+                    onPress: async () => {
+                        try {
+                            setIsUpdating(true);
+
+                            if (newStatus === "Approved") {
+                                await applicationsApi.acceptApplication(
+                                    application.id
+                                );
+                            } else {
+                                await applicationsApi.updateApplicationStatus(
+                                    application.id,
+                                    newStatus
+                                );
+                            }
+
+                            Alert.alert(
+                                "Success",
+                                newStatus === "Approved"
+                                    ? "Application approved and pet marked as adopted."
+                                    : "Application rejected successfully.",
+                                [
+                                    {
+                                        text: "OK",
+                                        onPress: () => navigation.goBack(),
+                                    },
+                                ]
+                            );
+
+                        } catch (error) {
+                            console.log(
+                                "Update application error:",
+                                error.response?.data || error.message
+                            );
+
+                            Alert.alert(
+                                "Error",
+                                error.response?.data?.message ||
+                                error.response?.data?.details ||
+                                error.message ||
+                                "Could not update the application. Please try again."
+                            );
+                        } finally {
+                            setIsUpdating(false);
+                        }
+                    },
+                },
+            ]
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
@@ -190,15 +256,30 @@ export default function ApplicationDetailsScreen({ navigation, route }) {
                     </View>
                 )}
 
+
                 {isReceived && isPending && (
                     <View style={styles.actions}>
-                        <Pressable style={styles.acceptButton}>
+                        <Pressable
+                            style={[
+                                styles.acceptButton,
+                                isUpdating && { opacity: 0.5 },
+                            ]}
+                            onPress={() => updateStatusHandler("Approved")}
+                            disabled={isUpdating}
+                        >
                             <Text style={styles.acceptButtonText}>
                                 Accept Application
                             </Text>
                         </Pressable>
 
-                        <Pressable style={styles.declineButton}>
+                        <Pressable
+                            style={[
+                                styles.declineButton,
+                                isUpdating && { opacity: 0.5 },
+                            ]}
+                            onPress={() => updateStatusHandler("Rejected")}
+                            disabled={isUpdating}
+                        >
                             <Text style={styles.declineButtonText}>
                                 Decline Application
                             </Text>

@@ -14,7 +14,6 @@ import {
 
 import { useState } from "react";
 import styles from "../styles/ApllicationFormScreen.styles";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ScreenHeader from "../components/ScreenHeader";
 import { useUserContext } from "../contexts/user/UserContext";
@@ -33,7 +32,6 @@ export default function ApllicationFormScreen({ navigation, route }) {
 
 
     const submitHandler = async () => {
-        // Validate required fields
         if (!fullName.trim() || !email.trim() || !phone.trim()) {
             Alert.alert(
                 "Missing information",
