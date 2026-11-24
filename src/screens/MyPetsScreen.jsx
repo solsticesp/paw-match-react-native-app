@@ -15,11 +15,13 @@ import { useFocusEffect } from "@react-navigation/native";
 import styles from "../styles/MyPetsScreen.styles";
 import MyPetCard from "../components/MyPetCard";
 import { petsApi } from "../api";
+import { useUserContext } from "../contexts/user/UserContext";
 
 export default function MyPetsScreen({ navigation }) {
     const [pets, setPets] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const { user } = useUserContext();
 
     const fetchPets = async (refresh = false) => {
         try {
@@ -29,15 +31,21 @@ export default function MyPetsScreen({ navigation }) {
                 setIsLoading(true);
             }
 
-            const data = await petsApi.getAll();
+            if (!user?.id) {
+                setPets([]);
+                return;
+            }
+
+            const data = await petsApi.getMyPets(user.id);
             setPets(data);
+
         } catch (error) {
             console.log(
                 "Error fetching pets:",
                 error.response?.data || error.message
             );
 
-            Alert.alert("Error", "Could not load pets.");
+            Alert.alert("Error", "Could not load your pets.");
         } finally {
             setIsLoading(false);
             setIsRefreshing(false);
@@ -47,7 +55,7 @@ export default function MyPetsScreen({ navigation }) {
     useFocusEffect(
         useCallback(() => {
             fetchPets();
-        }, [])
+        }, [user?.id])
     );
 
     const handleDelete = (id) => {

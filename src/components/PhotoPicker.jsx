@@ -12,10 +12,9 @@ import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function PhotoPicker({
+    imageUri,
     onImageSelected,
 }) {
-    const [imageUri, setImageUri] = useState(null);
-
     const chooseFromGalleryHandler = async () => {
         const permissionResult =
             await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -41,7 +40,6 @@ export default function PhotoPicker({
 
         const uri = result.assets[0].uri;
 
-        setImageUri(uri);
         onImageSelected(uri);
     };
 
@@ -68,7 +66,6 @@ export default function PhotoPicker({
 
         const uri = result.assets[0].uri;
 
-        setImageUri(uri);
         onImageSelected(uri);
     }
 

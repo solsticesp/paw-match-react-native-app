@@ -16,6 +16,14 @@ export async function getById(id) {
     return response.data[0];
 }
 
+export async function getMyPets(userId) {
+    const response = await api.get(
+        `/pets?user_id=eq.${userId}&select=*,categories(name)&order=created_at.desc`
+    );
+
+    return response.data;
+}
+
 export async function getFeatured() {
     const response = await api.get(
         '/pets?select=*,categories(name)&status=eq.Available&order=created_at.desc&limit=6'

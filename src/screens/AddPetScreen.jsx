@@ -190,7 +190,10 @@ export default function AddPetScreen({
                         : "Help a furry friend find their forever home."}
                 </Text>
 
-                <PhotoPicker onImageSelected={(uri) => updateField("imageUrl", uri)} />
+                <PhotoPicker
+                    imageUri={form.imageUrl}
+                    onImageSelected={(uri) => updateField("imageUrl", uri)}
+                />
 
                 <Text style={styles.sectionTitle}>Basic Information</Text>
 

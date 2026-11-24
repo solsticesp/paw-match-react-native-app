@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 import styles from "../styles/PetDetailsScreen.styles";
 import { petsApi } from '../api';
+import { useUserContext } from "../contexts/user/UserContext";
 
 export default function PetDetailsScreen({
     navigation,
@@ -13,7 +14,7 @@ export default function PetDetailsScreen({
     const { petId } = route.params;
     const [pet, setPet] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
-
+    const { user } = useUserContext();
 
     useEffect(() => {
         petsApi.getById(petId)
@@ -31,6 +32,7 @@ export default function PetDetailsScreen({
     }
 
     const category = pet.categories?.name || "Pet";
+    const isOwner = user?.id === pet.user_id;
 
     const handleRefresh = async () => {
         setRefreshing(true);
@@ -111,18 +113,20 @@ export default function PetDetailsScreen({
                 </View>
             </ScrollView>
 
-            <View style={styles.bottomAction}>
-                <Pressable
-                    style={styles.primaryButton}
-                    onPress={() =>
-                        navigation.navigate("ApplicationForm", { pet })
-                    }
-                >
-                    <Text style={styles.primaryButtonText}>
-                        Apply to Adopt
-                    </Text>
-                </Pressable>
-            </View>
+            {!isOwner && pet.status === "Available" && (
+                <View style={styles.bottomAction}>
+                    <Pressable
+                        style={styles.primaryButton}
+                        onPress={() =>
+                            navigation.navigate("ApplicationForm", { pet })
+                        }
+                    >
+                        <Text style={styles.primaryButtonText}>
+                            Apply to Adopt
+                        </Text>
+                    </Pressable>
+                </View>
+            )}
 
         </SafeAreaView>
     );
